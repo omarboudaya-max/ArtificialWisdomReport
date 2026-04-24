@@ -1,4 +1,5 @@
 from fastapi import FastAPI, HTTPException
+from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 from typing import Optional, List
 import time
@@ -7,6 +8,15 @@ from engines.data_audit import DataAuditEngine
 from engines.system_audit import SystemAuditEngine
 
 app = FastAPI(title="Artificial Wisdom API", version="1.0.0")
+
+# Enable CORS
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"], # In production, replace with your frontend URL
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 class AuditRequest(BaseModel):
     url: Optional[str] = None

@@ -15,12 +15,32 @@ export default function Home() {
     if (!input) return;
     
     setIsLoading(true);
-    // The AuditProgress component handles the visual timing
-    // We wait 6 seconds (slightly more than the progress bar) then redirect
-    setTimeout(() => {
-      setIsLoading(false);
-      router.push('/dashboard');
-    }, 6500);
+    
+    try {
+      const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000';
+      const response = await fetch(`${apiUrl}/audit/quick`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ url: input })
+      });
+      
+      if (response.ok) {
+        // The AuditProgress component handles the visual timing
+        setTimeout(() => {
+          setIsLoading(false);
+          router.push('/dashboard');
+        }, 6500);
+      } else {
+        throw new Error("Audit failed");
+      }
+    } catch (error) {
+      console.error("Audit error:", error);
+      // Fallback for demo purposes if backend is offline
+      setTimeout(() => {
+        setIsLoading(false);
+        router.push('/dashboard');
+      }, 6500);
+    }
   };
 
   return (

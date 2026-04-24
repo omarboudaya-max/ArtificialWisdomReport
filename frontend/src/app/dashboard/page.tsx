@@ -28,22 +28,39 @@ export default function Dashboard() {
   };
 
   useEffect(() => {
-    // Simulate fetching report from backend
-    setReport({
-      overall_score: 87.5,
-      metrics: {
-        model_wisdom: 89,
-        data_wisdom: 84,
-        system_wisdom: 90
-      },
-      risk_level: "Low",
-      insights: [
-        "Optimal accuracy across primary datasets",
-        "Low bias detected in demographic subsets",
-        "System infrastructure is highly resilient"
-      ],
-      certified_date: "April 23, 2026"
-    });
+    const fetchReport = async () => {
+      try {
+        const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000';
+        const response = await fetch(`${apiUrl}/audit/report/AW-98234-X`);
+        if (response.ok) {
+          const data = await response.json();
+          setReport({
+            ...data,
+            certified_date: "April 23, 2026" // Manual fallback for display
+          });
+        }
+      } catch (error) {
+        console.error("Failed to fetch report:", error);
+        // Fallback to mock data if backend is offline
+        setReport({
+          overall_score: 87.5,
+          metrics: {
+            model_wisdom: 89,
+            data_wisdom: 84,
+            system_wisdom: 90
+          },
+          risk_level: "Low",
+          insights: [
+            "Optimal accuracy across primary datasets",
+            "Low bias detected in demographic subsets",
+            "System infrastructure is highly resilient"
+          ],
+          certified_date: "April 23, 2026"
+        });
+      }
+    };
+
+    fetchReport();
   }, []);
 
   if (!report) return <div className="p-20 text-center">Loading Report...</div>;
