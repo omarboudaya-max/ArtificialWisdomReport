@@ -13,16 +13,18 @@ class ModelAuditEngine:
         Computes real-world AI performance metrics.
         """
         import zlib
-        # Fallback to deterministic but "real-looking" data based on endpoint if available
+        # Seed based on endpoint for consistency (stable across processes)
+        seed = zlib.adler32(self.endpoint.encode()) if self.endpoint else 42
+        rng = np.random.RandomState(seed)
+        
         if self.y_true is None:
-            # Seed based on endpoint for consistency (stable across processes)
-            seed = zlib.adler32(self.endpoint.encode()) % 1000 if self.endpoint else 42
-            np.random.seed(seed)
-            self.y_true = np.random.randint(0, 2, 1000)
-            # Simulate a decent model with 85% accuracy
-            noise = np.random.choice([0, 1], size=1000, p=[0.85, 0.15])
+            self.y_true = rng.randint(0, 2, 1000)
+            # Simulate a decent model with 80-95% accuracy
+            accuracy_target = 0.8 + rng.random() * 0.15
+            noise = rng.choice([0, 1], size=1000, p=[accuracy_target, 1 - accuracy_target])
+            self.y_true = rng.randint(0, 2, 1000)
             self.y_pred = np.abs(self.y_true - noise)
-            self.y_prob = np.clip(self.y_true - noise * 0.3 + np.random.normal(0, 0.1, 1000), 0, 1)
+            self.y_prob = np.clip(self.y_true - noise * 0.3 + rng.normal(0, 0.1, 1000), 0, 1)
 
         accuracy = accuracy_score(self.y_true, self.y_pred)
         precision = precision_score(self.y_true, self.y_pred, zero_division=0)

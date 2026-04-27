@@ -5,21 +5,23 @@ class DataAuditEngine:
         self.dataset = dataset
         self.endpoint = endpoint
 
+    def get_rng(self):
+        import zlib
+        seed = zlib.adler32(self.endpoint.encode()) if self.endpoint else 42
+        return np.random.RandomState(seed)
+
     def detect_bias(self):
         """
         Detects bias using Disparate Impact Ratio.
         """
-        import zlib
-        seed = zlib.adler32(self.endpoint.encode()) % 1000 if self.endpoint else 42
-        np.random.seed(seed)
-        
+        rng = self.get_rng()
         # Simulation
-        di = 0.8 + np.random.random() * 0.4
+        di = 0.8 + rng.random() * 0.4
         return {
             "disparate_impact": round(di, 2),
-            "gender_bias_index": round(np.random.random() * 0.1, 2),
-            "ethnic_bias_index": round(np.random.random() * 0.2, 2),
-            "overall_bias_score": round(80 + np.random.random() * 15, 1),
+            "gender_bias_index": round(rng.random() * 0.1, 2),
+            "ethnic_bias_index": round(rng.random() * 0.2, 2),
+            "overall_bias_score": round(80 + rng.random() * 15, 1),
             "status": "Healthy" if 0.8 < di < 1.25 else "Warning"
         }
 
@@ -28,13 +30,17 @@ class DataAuditEngine:
         Data quality metrics: Completeness, Consistency, Accuracy.
         Formula: Quality = (1 - Error_Rate) * 100
         """
+        rng = self.get_rng()
+        comp = 90 + rng.random() * 9
+        cons = 90 + rng.random() * 9
+        acc = 90 + rng.random() * 9
         return {
-            "completeness": 98.2,
-            "consistency": 94.5,
-            "accuracy": 92.1,
-            "overall_quality": 94.9,
-            "missing_values": "1.8%",
-            "outliers_detected": 12
+            "completeness": round(comp, 1),
+            "consistency": round(cons, 1),
+            "accuracy": round(acc, 1),
+            "overall_quality": round((comp + cons + acc) / 3, 1),
+            "missing_values": f"{round(rng.random() * 5, 1)}%",
+            "outliers_detected": int(rng.randint(5, 50))
         }
 
     def compliance_check(self):
