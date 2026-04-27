@@ -17,7 +17,8 @@ export default function Home() {
     setIsLoading(true);
     
     try {
-      const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000';
+      const defaultApiUrl = typeof window !== 'undefined' && window.location.hostname !== 'localhost' ? '/api' : 'http://localhost:8000';
+      const apiUrl = process.env.NEXT_PUBLIC_API_URL || defaultApiUrl;
       const response = await fetch(`${apiUrl}/audit/quick`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
