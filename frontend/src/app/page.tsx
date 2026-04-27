@@ -42,10 +42,11 @@ export default function Home() {
       console.log("Backend error, using fallback");
     }
     
-    // Fallback redirect if backend fails
+    // Fallback redirect if backend fails - still pass the URL so the dashboard can be unique
+    const fallbackId = `audit_${btoa(input).replace(/=/g, '')}_${Date.now()}`;
     setTimeout(() => {
       setIsLoading(false);
-      router.push('/dashboard');
+      window.location.href = `/dashboard?id=${fallbackId}`;
     }, 6500);
   };
 
