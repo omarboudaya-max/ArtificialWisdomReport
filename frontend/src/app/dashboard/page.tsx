@@ -30,18 +30,21 @@ export default function Dashboard() {
   useEffect(() => {
     const fetchReport = async () => {
       try {
-        const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000';
-        const response = await fetch(`${apiUrl}/audit/report/AW-98234-X`);
-        if (response.ok) {
-          const data = await response.json();
-          setReport({
-            ...data,
-            certified_date: "April 23, 2026" // Manual fallback for display
-          });
+        const apiUrl = process.env.NEXT_PUBLIC_API_URL;
+        if (apiUrl) {
+          const response = await fetch(`${apiUrl}/audit/report/AW-98234-X`);
+          if (response.ok) {
+            const data = await response.json();
+            setReport({
+              ...data,
+              certified_date: "April 23, 2026"
+            });
+            return;
+          }
         }
+        throw new Error("No API or API failed");
       } catch (error) {
-        console.error("Failed to fetch report:", error);
-        // Fallback to mock data if backend is offline
+        console.log("Using demo data fallback");
         setReport({
           overall_score: 87.5,
           metrics: {

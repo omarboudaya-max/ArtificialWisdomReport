@@ -17,25 +17,18 @@ export default function Home() {
     setIsLoading(true);
     
     try {
-      const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000';
-      const response = await fetch(`${apiUrl}/audit/quick`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ url: input })
-      });
-      
-      if (response.ok) {
-        // The AuditProgress component handles the visual timing
-        setTimeout(() => {
-          setIsLoading(false);
-          router.push('/dashboard');
-        }, 6500);
-      } else {
-        throw new Error("Audit failed");
+      const apiUrl = process.env.NEXT_PUBLIC_API_URL;
+      if (apiUrl) {
+        await fetch(`${apiUrl}/audit/quick`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ url: input })
+        });
       }
     } catch (error) {
-      console.error("Audit error:", error);
-      // Fallback for demo purposes if backend is offline
+      console.log("Backend offline, using fallback");
+    } finally {
+      // Always show progress then redirect
       setTimeout(() => {
         setIsLoading(false);
         router.push('/dashboard');
