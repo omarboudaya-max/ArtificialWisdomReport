@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from 'react';
+import { useEffect, useState, Suspense } from 'react';
 import { useSearchParams } from 'next/navigation';
 import Link from 'next/link';
 import CertificationBadge from '@/components/CertificationBadge';
@@ -39,7 +39,7 @@ const ScoreGauge = ({ score, label }: { score: number, label: string }) => {
   );
 };
 
-export default function Dashboard() {
+function DashboardContent() {
   const [report, setReport] = useState<any>(null);
   const searchParams = useSearchParams();
   const auditId = searchParams.get('id') || 'AW-98234-X';
@@ -121,7 +121,7 @@ export default function Dashboard() {
     };
 
     fetchReport();
-  }, []);
+  }, [auditId]);
 
   if (!report) return <div className="p-20 text-center">Loading Report...</div>;
 
@@ -232,5 +232,13 @@ export default function Dashboard() {
         <Link href="/" className="btn btn-primary" style={{ padding: '15px 40px' }}>Start New Audit</Link>
       </div>
     </div>
+  );
+}
+
+export default function Dashboard() {
+  return (
+    <Suspense fallback={<div className="p-20 text-center">Loading Audit Session...</div>}>
+      <DashboardContent />
+    </Suspense>
   );
 }
