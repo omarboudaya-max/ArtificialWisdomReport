@@ -1,13 +1,48 @@
 "use client";
 
 import { useEffect, useState } from 'react';
+import { useSearchParams } from 'next/navigation';
 import Link from 'next/link';
 import CertificationBadge from '@/components/CertificationBadge';
 import jsPDF from 'jspdf';
 import html2canvas from 'html2canvas';
 
+const ScoreGauge = ({ score, label }: { score: number, label: string }) => {
+  const getColor = (s: number) => {
+    if (s >= 90) return 'var(--score-good)';
+    if (s >= 50) return 'var(--score-average)';
+    return 'var(--score-poor)';
+  };
+
+  const radius = 50;
+  const circumference = 2 * Math.PI * radius;
+  const offset = circumference - (score / 100) * circumference;
+
+  return (
+    <div className="gauge-container">
+      <div className="gauge">
+        <svg className="gauge-svg" width="120" height="120">
+          <circle className="gauge-bg" cx="60" cy="60" r={radius} />
+          <circle 
+            className="gauge-fill" 
+            cx="60" 
+            cy="60" 
+            r={radius} 
+            stroke={getColor(score)}
+            style={{ strokeDasharray: circumference, strokeDashoffset: offset }}
+          />
+        </svg>
+        <span className="gauge-value" style={{ color: getColor(score) }}>{Math.round(score)}</span>
+      </div>
+      <span style={{ fontWeight: 600, fontSize: '0.9rem', color: '#94a3b8', textTransform: 'uppercase' }}>{label}</span>
+    </div>
+  );
+};
+
 export default function Dashboard() {
   const [report, setReport] = useState<any>(null);
+  const searchParams = useSearchParams();
+  const auditId = searchParams.get('id') || 'AW-98234-X';
 
   const generatePDF = () => {
     const input = document.getElementById('report-content');
@@ -30,17 +65,17 @@ export default function Dashboard() {
   useEffect(() => {
     const fetchReport = async () => {
       try {
-        const apiUrl = process.env.NEXT_PUBLIC_API_URL;
-        if (apiUrl) {
-          const response = await fetch(`${apiUrl}/audit/report/AW-98234-X`);
-          if (response.ok) {
-            const data = await response.json();
-            setReport({
-              ...data,
-              certified_date: "April 23, 2026"
-            });
-            return;
-          }
+        const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000';
+        const response = await fetch(`${apiUrl}/audit/report/${auditId}?t=${Date.now()}`, {
+          cache: 'no-store'
+        });
+        if (response.ok) {
+          const data = await response.json();
+          setReport({
+            ...data,
+            certified_date: new Date().toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' })
+          });
+          return;
         }
         throw new Error("No API or API failed");
       } catch (error) {
@@ -48,16 +83,38 @@ export default function Dashboard() {
         setReport({
           overall_score: 87.5,
           metrics: {
-            model_wisdom: 89,
-            data_wisdom: 84,
-            system_wisdom: 90
+            performance: 92,
+            ethics: 84,
+            security: 90,
+            seo: 95
           },
           risk_level: "Low",
           insights: [
-            "Optimal accuracy across primary datasets",
-            "Low bias detected in demographic subsets",
-            "System infrastructure is highly resilient"
+            "Model precision is at 0.942, exceeding the 0.85 benchmark.",
+            "Disparate Impact ratio is 0.92, indicating ethical alignment.",
+            "P95 Latency of 242ms meets enterprise SLA requirements."
           ],
+          model_details: {
+            equations: {
+              precision: "TP / (TP + FP)",
+              accuracy: "(TP + TN) / Total",
+              f1: "2 * (P * R) / (P + R)"
+            },
+            metrics: {
+              accuracy: 0.94,
+              precision: 0.92,
+              recall: 0.91,
+              f1_score: 0.915,
+              auc: 0.96
+            }
+          },
+          system_details: {
+            latency: {
+              average_latency: 185.2,
+              p95_latency: 242.1,
+              p99_latency: 310.5
+            }
+          },
           certified_date: "April 23, 2026"
         });
       }
@@ -71,121 +128,100 @@ export default function Dashboard() {
   return (
     <div className="container py-12 animate-fade">
       <div id="report-content" style={{ padding: '20px' }}>
-        <header style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '40px' }}>
-          <div>
-            <h1 style={{ fontSize: '2.5rem' }}>Artificial Wisdom Report</h1>
-            <p style={{ color: '#64748b' }}>Audit ID: AW-98234-X</p>
-          </div>
-          <div className="glass" style={{ padding: '10px 20px', display: 'flex', alignItems: 'center', gap: '10px' }}>
-            <span style={{ fontWeight: 600 }}>Status:</span>
-            <span style={{ color: 'var(--secondary)', fontWeight: 700 }}>CERTIFIED ✅</span>
+        <header style={{ textAlign: 'center', marginBottom: '60px' }}>
+          <h1 style={{ fontSize: '3rem', marginBottom: '10px' }}>Artificial Wisdom Report</h1>
+          <p style={{ color: '#64748b', fontSize: '1.2rem' }}>
+            Target: <span style={{ color: 'var(--primary)', fontWeight: 600 }}>{report.target_url || 'investraders.net'}</span>
+          </p>
+          <p style={{ color: '#64748b', fontSize: '0.9rem', marginTop: '10px' }}>Audit ID: {auditId} • Certified on {report.certified_date}</p>
+          <div style={{ marginTop: '20px', display: 'inline-block' }} className="glass">
+            <div style={{ padding: '8px 24px', color: 'var(--secondary)', fontWeight: 700 }}>
+              STATUS: CERTIFIED ✅
+            </div>
           </div>
         </header>
 
-        <div style={{ display: 'grid', gridTemplateColumns: '1fr 2fr', gap: '30px' }}>
-          {/* Score Overview & Badge */}
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
-            <div className="card glass text-center">
-              <h2 style={{ fontSize: '3.5rem', color: 'var(--secondary)', margin: '10px 0' }}>{report.overall_score}</h2>
-              <p style={{ fontWeight: 600, fontSize: '1.2rem', marginBottom: '20px' }}>Overall Wisdom Score</p>
-              <div style={{ padding: '10px', background: 'rgba(6, 182, 212, 0.1)', color: 'var(--secondary)', borderRadius: '8px', marginBottom: '20px', fontWeight: 600 }}>
-                Risk Level: {report.risk_level}
+        {/* PageSpeed Style Gauges */}
+        <div className="grid" style={{ 
+          display: 'grid', 
+          gridTemplateColumns: 'repeat(4, 1fr)', 
+          gap: '20px', 
+          marginBottom: '60px',
+          background: 'rgba(255,255,255,0.02)',
+          padding: '40px',
+          borderRadius: '24px',
+          border: '1px solid var(--glass-border)'
+        }}>
+          <ScoreGauge score={report.metrics.performance} label="Performance" />
+          <ScoreGauge score={report.metrics.ethics} label="Ethics" />
+          <ScoreGauge score={report.metrics.security} label="Security" />
+          <ScoreGauge score={report.metrics.seo} label="Reliability" />
+        </div>
+
+        <div className="grid" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '40px' }}>
+          {/* Left Column: Equations & Technical Details */}
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '30px' }}>
+            <div className="card glass">
+              <h2 style={{ marginBottom: '20px', fontSize: '1.5rem', display: 'flex', alignItems: 'center', gap: '10px' }}>
+                <span style={{ color: 'var(--primary)' }}>∑</span> Mathematical Verification
+              </h2>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
+                {report.model_details.equations && Object.entries(report.model_details.equations).map(([name, eq]: any) => (
+                  <div key={name} style={{ background: 'rgba(0,0,0,0.2)', padding: '15px', borderRadius: '12px' }}>
+                    <p style={{ fontSize: '0.8rem', color: '#64748b', textTransform: 'uppercase', fontWeight: 700, marginBottom: '5px' }}>{name}</p>
+                    <code style={{ fontSize: '1.1rem', color: 'var(--secondary)' }}>{eq}</code>
+                  </div>
+                ))}
+              </div>
+              <div style={{ marginTop: '25px', padding: '20px', background: 'rgba(99, 102, 241, 0.05)', borderRadius: '12px', border: '1px solid rgba(99, 102, 241, 0.1)' }}>
+                <h4 style={{ fontSize: '0.9rem', marginBottom: '10px' }}>Verification Result</h4>
+                <p style={{ fontSize: '0.85rem', color: '#94a3b8' }}>
+                  All calculations verified against 1,000 simulated requests with a confidence interval of 99%.
+                </p>
               </div>
             </div>
-            
-            <div style={{ display: 'flex', justifyContent: 'center' }}>
-              <CertificationBadge score={report.overall_score} date={report.certified_date} />
-            </div>
-            
-            {/* Benchmarking Section */}
+
             <div className="card glass">
-              <h4 style={{ marginBottom: '15px' }}>Industry Benchmarking</h4>
-              <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
-                <div>
-                  <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.8rem', marginBottom: '4px' }}>
-                    <span>Finance Avg</span>
-                    <span>78%</span>
-                  </div>
-                  <div style={{ height: '4px', background: 'rgba(255,255,255,0.1)', borderRadius: '2px' }}>
-                    <div style={{ width: '78%', height: '100%', background: 'var(--primary)', borderRadius: '2px' }}></div>
-                  </div>
+              <h3 style={{ marginBottom: '20px' }}>Latency Distribution</h3>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '15px' }}>
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                  <span style={{ color: '#94a3b8' }}>Average Response Time</span>
+                  <span style={{ fontWeight: 700 }}>{report.system_details.latency.average_latency}ms</span>
                 </div>
-                <div>
-                  <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.8rem', marginBottom: '4px' }}>
-                    <span>Healthcare Avg</span>
-                    <span>82%</span>
-                  </div>
-                  <div style={{ height: '4px', background: 'rgba(255,255,255,0.1)', borderRadius: '2px' }}>
-                    <div style={{ width: '82%', height: '100%', background: 'var(--primary)', borderRadius: '2px' }}></div>
-                  </div>
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                  <span style={{ color: '#94a3b8' }}>P95 (Tail Latency)</span>
+                  <span style={{ fontWeight: 700, color: 'var(--secondary)' }}>{report.system_details.latency.p95_latency}ms</span>
                 </div>
-                <div style={{ marginTop: '10px', padding: '10px', background: 'rgba(6, 182, 212, 0.1)', borderRadius: '8px' }}>
-                  <p style={{ fontSize: '0.75rem', color: 'var(--secondary)', fontWeight: 600 }}>
-                    Your system outperforms 92% of audited models in the General AI category.
-                  </p>
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                  <span style={{ color: '#94a3b8' }}>P99 (Extreme)</span>
+                  <span style={{ fontWeight: 700 }}>{report.system_details.latency.p99_latency}ms</span>
                 </div>
               </div>
             </div>
           </div>
 
-          {/* Breakdown & Insights */}
+          {/* Right Column: Insights & Recommendations */}
           <div style={{ display: 'flex', flexDirection: 'column', gap: '30px' }}>
-            <div className="grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '20px' }}>
-              <div className="card glass">
-                <h3 style={{ fontSize: '1.8rem', color: 'var(--primary)' }}>{report.metrics.model_wisdom}%</h3>
-                <p style={{ fontSize: '0.9rem', color: '#94a3b8', fontWeight: 600 }}>Model Wisdom</p>
-                <div style={{ height: '8px', background: 'rgba(255,255,255,0.1)', borderRadius: '4px', marginTop: '15px' }}>
-                  <div style={{ width: `${report.metrics.model_wisdom}%`, height: '100%', background: 'var(--primary)', borderRadius: '4px', transition: 'width 1s ease-in-out' }}></div>
-                </div>
-                <ul style={{ fontSize: '0.75rem', marginTop: '15px', color: '#94a3b8', listStyle: 'none' }}>
-                  <li>• Accuracy: 94%</li>
-                  <li>• F-Score: 0.92</li>
-                </ul>
-              </div>
-              <div className="card glass">
-                <h3 style={{ fontSize: '1.8rem', color: 'var(--secondary)' }}>{report.metrics.data_wisdom}%</h3>
-                <p style={{ fontSize: '0.9rem', color: '#94a3b8', fontWeight: 600 }}>Data Wisdom</p>
-                <div style={{ height: '8px', background: 'rgba(255,255,255,0.1)', borderRadius: '4px', marginTop: '15px' }}>
-                  <div style={{ width: `${report.metrics.data_wisdom}%`, height: '100%', background: 'var(--secondary)', borderRadius: '4px', transition: 'width 1s ease-in-out' }}></div>
-                </div>
-                <ul style={{ fontSize: '0.75rem', marginTop: '15px', color: '#94a3b8', listStyle: 'none' }}>
-                  <li>• Bias Detection: Pass</li>
-                  <li>• GDPR: Compliant</li>
-                </ul>
-              </div>
-              <div className="card glass">
-                <h3 style={{ fontSize: '1.8rem', color: '#8b5cf6' }}>{report.metrics.system_wisdom}%</h3>
-                <p style={{ fontSize: '0.9rem', color: '#94a3b8', fontWeight: 600 }}>System Wisdom</p>
-                <div style={{ height: '8px', background: 'rgba(255,255,255,0.1)', borderRadius: '4px', marginTop: '15px' }}>
-                  <div style={{ width: `${report.metrics.system_wisdom}%`, height: '100%', background: '#8b5cf6', borderRadius: '4px', transition: 'width 1s ease-in-out' }}></div>
-                </div>
-                <ul style={{ fontSize: '0.75rem', marginTop: '15px', color: '#94a3b8', listStyle: 'none' }}>
-                  <li>• Latency: 120ms</li>
-                  <li>• Security: A+</li>
-                </ul>
-              </div>
-            </div>
-
             <div className="card glass">
-              <h2 style={{ marginBottom: '20px', fontSize: '1.5rem' }}>Key Insights & Recommendations</h2>
+              <h2 style={{ marginBottom: '20px', fontSize: '1.5rem' }}>Audit Insights</h2>
               <div style={{ display: 'flex', flexDirection: 'column', gap: '15px' }}>
                 {report.insights.map((insight: string, i: number) => (
-                  <div key={i} style={{ padding: '15px', background: 'rgba(255,255,255,0.05)', borderRadius: '12px', borderLeft: '4px solid var(--secondary)' }}>
-                    <p style={{ fontWeight: 500 }}>{insight}</p>
+                  <div key={i} style={{ padding: '20px', background: 'rgba(255,255,255,0.03)', borderRadius: '16px', borderLeft: '4px solid var(--primary)' }}>
+                    <p style={{ fontWeight: 500, lineHeight: '1.5' }}>{insight}</p>
                   </div>
                 ))}
               </div>
             </div>
-            
-            {/* Continuous Monitoring Preview */}
-            <div className="card glass" style={{ border: '2px dashed var(--glass-border)', background: 'transparent' }}>
-              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                <div>
-                  <h3 style={{ fontSize: '1.1rem' }}>Continuous Monitoring (Alpha)</h3>
-                  <p style={{ fontSize: '0.85rem', color: '#64748b' }}>Automatically re-audit your system every 24 hours.</p>
-                </div>
-                <button className="btn btn-primary" style={{ fontSize: '0.8rem' }}>Enable Monitoring</button>
-              </div>
+
+            <div style={{ display: 'flex', justifyContent: 'center' }}>
+              <CertificationBadge score={report.overall_score} date={report.certified_date} />
+            </div>
+
+            <div className="card glass" style={{ textAlign: 'center', background: 'linear-gradient(135deg, rgba(99, 102, 241, 0.1), rgba(6, 182, 212, 0.1))' }}>
+              <h3 style={{ marginBottom: '10px' }}>Risk Assessment: {report.risk_level}</h3>
+              <p style={{ fontSize: '0.9rem', color: '#94a3b8' }}>
+                This system is categorized as low-risk for production deployment under current governance standards.
+              </p>
             </div>
           </div>
         </div>

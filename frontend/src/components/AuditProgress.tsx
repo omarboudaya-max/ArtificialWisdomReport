@@ -10,7 +10,7 @@ const steps = [
   "Generating Certification Report..."
 ];
 
-const AuditProgress: React.FC = () => {
+const AuditProgress: React.FC<{ targetUrl?: string }> = ({ targetUrl }) => {
   const [currentStep, setCurrentStep] = useState(0);
   const [progress, setProgress] = useState(0);
 
@@ -23,7 +23,7 @@ const AuditProgress: React.FC = () => {
         }
         return prev + 1;
       });
-    }, 50); // 5 seconds total roughly
+    }, 60); // Roughly 6 seconds
 
     return () => clearInterval(interval);
   }, []);
@@ -35,7 +35,11 @@ const AuditProgress: React.FC = () => {
 
   return (
     <div className="glass animate-fade" style={{ padding: '40px', width: '100%', maxWidth: '600px', margin: '0 auto' }}>
-      <h2 style={{ marginBottom: '20px' }}>AI Wisdom Audit in Progress</h2>
+      <h2 style={{ marginBottom: '10px' }}>AI Wisdom Audit in Progress</h2>
+      <p style={{ color: 'var(--primary)', fontWeight: 600, marginBottom: '25px', fontSize: '0.9rem' }}>
+        Scanning: {targetUrl || 'Initializing...'}
+      </p>
+      
       <div style={{ height: '12px', background: 'rgba(255,255,255,0.1)', borderRadius: '6px', overflow: 'hidden', marginBottom: '30px' }}>
         <div style={{ 
           width: `${progress}%`, 

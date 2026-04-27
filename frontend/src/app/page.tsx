@@ -17,30 +17,42 @@ export default function Home() {
     setIsLoading(true);
     
     try {
-      const apiUrl = process.env.NEXT_PUBLIC_API_URL;
-      if (apiUrl) {
-        await fetch(`${apiUrl}/audit/quick`, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ url: input })
-        });
+      const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000';
+      const response = await fetch(`${apiUrl}/audit/quick`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ url: input }),
+        cache: 'no-store'
+      });
+      
+      if (response.ok) {
+        const data = await response.json();
+        const auditId = data.audit_id;
+        
+        // Show progress for a bit then redirect with real ID
+        setTimeout(() => {
+          setIsLoading(false);
+          // Use window.location for a hard redirect to clear all state
+          window.location.href = `/dashboard?id=${auditId}`;
+        }, 6500);
+        return;
       }
     } catch (error) {
-      console.log("Backend offline, using fallback");
-    } finally {
-      // Always show progress then redirect
-      setTimeout(() => {
-        setIsLoading(false);
-        router.push('/dashboard');
-      }, 6500);
+      console.log("Backend error, using fallback");
     }
+    
+    // Fallback redirect if backend fails
+    setTimeout(() => {
+      setIsLoading(false);
+      router.push('/dashboard');
+    }, 6500);
   };
 
   return (
     <main className="hero">
       <div className="container animate-fade">
         {isLoading ? (
-          <AuditProgress />
+          <AuditProgress targetUrl={input} />
         ) : (
           <>
             <div className="badge-pill mb-4" style={{ 
@@ -70,11 +82,25 @@ export default function Home() {
                 disabled={isLoading}
               />
               <button type="submit" className="btn btn-primary" disabled={isLoading}>
-                Start Audit
+                {isLoading ? 'Scanning...' : 'Start Audit'}
               </button>
             </form>
             
-            <div style={{ marginTop: '20px', display: 'flex', gap: '20px', justifyContent: 'center' }}>
+            <div style={{ marginTop: '20px', display: 'flex', flexDirection: 'column', gap: '15px', alignItems: 'center' }}>
+              <button 
+                onClick={() => setInput('https://www.investraders.net/')}
+                style={{ 
+                  background: 'none', 
+                  border: 'none', 
+                  color: 'rgba(255,255,255,0.5)', 
+                  cursor: 'pointer',
+                  fontSize: '0.9rem',
+                  textDecoration: 'underline'
+                }}
+              >
+                Or try with sample: investraders.net
+              </button>
+
               <p style={{ color: '#64748b', fontSize: '0.9rem' }}>
                 Looking for Enterprise solutions? 
                 <Link href="/governance" style={{ color: 'var(--primary)', fontWeight: 600, marginLeft: '8px', textDecoration: 'none' }}>
