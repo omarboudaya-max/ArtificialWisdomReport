@@ -23,7 +23,7 @@ const AuditProgress: React.FC<{ targetUrl?: string }> = ({ targetUrl }) => {
         }
         return prev + 1;
       });
-    }, 95); // Roughly 9.5 seconds
+    }, 400); // 40 seconds total (400ms * 100)
 
     return () => clearInterval(interval);
   }, []);
@@ -79,7 +79,7 @@ const AuditProgress: React.FC<{ targetUrl?: string }> = ({ targetUrl }) => {
       </div>
       
       <p style={{ marginTop: '30px', fontSize: '0.9rem', color: '#94a3b8' }}>
-        This audit usually takes between 10-15 seconds. Please do not close this window.
+        This comprehensive audit takes about 40 seconds. Please do not close this window.
       </p>
     </div>
   );
