@@ -4,6 +4,7 @@ import { useEffect, useState, Suspense } from 'react';
 import { useSearchParams } from 'next/navigation';
 import Link from 'next/link';
 import CertificationBadge from '@/components/CertificationBadge';
+import AuditProgress from '@/components/AuditProgress';
 import jsPDF from 'jspdf';
 import html2canvas from 'html2canvas';
 
@@ -157,7 +158,13 @@ function DashboardContent() {
     fetchReport();
   }, [auditId]);
 
-  if (!report) return <div className="p-20 text-center">Loading Report...</div>;
+  if (!report) {
+    return (
+      <div className="container py-12">
+        <AuditProgress targetUrl={auditId.includes('audit_') ? 'Retrieving Target...' : auditId} isComplete={false} />
+      </div>
+    );
+  }
 
   return (
     <div className="container py-12 animate-fade">

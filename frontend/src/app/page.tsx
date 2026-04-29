@@ -30,12 +30,8 @@ export default function Home() {
         const data = await response.json();
         const auditId = data.audit_id;
         
-        // Show progress for a bit then redirect with real ID
-        setTimeout(() => {
-          setIsLoading(false);
-          // Use window.location for a hard redirect to clear all state
-          window.location.href = `/dashboard?id=${auditId}`;
-        }, 8000);
+        // Redirect to dashboard immediately to show real-time progress
+        window.location.href = `/dashboard?id=${auditId}`;
         return;
       }
     } catch (error) {
@@ -44,10 +40,7 @@ export default function Home() {
     
     // Fallback redirect if backend fails - still pass the URL so the dashboard can be unique
     const fallbackId = `audit_${btoa(input).replace(/=/g, '')}_${Date.now()}`;
-    setTimeout(() => {
-      setIsLoading(false);
-      window.location.href = `/dashboard?id=${fallbackId}`;
-    }, 8000);
+    window.location.href = `/dashboard?id=${fallbackId}`;
   };
 
   const [activeTab, setActiveTab] = useState('url');
@@ -96,40 +89,34 @@ export default function Home() {
 
           {/* Audit Input Area */}
           <div className="glass" style={{ maxWidth: '800px', margin: '0 auto 80px', padding: '40px', borderRadius: '24px' }}>
-            {isLoading ? (
-              <AuditProgress targetUrl={input} />
-            ) : (
-              <>
-                <h3 style={{ textAlign: 'center', marginBottom: '30px', fontSize: '1.5rem' }}>Start Your Audit</h3>
-                
-                {/* Tabs */}
-                <div style={{ display: 'flex', gap: '10px', marginBottom: '20px', borderBottom: '1px solid rgba(255,255,255,0.1)', paddingBottom: '15px' }}>
-                  <button onClick={() => setActiveTab('url')} style={{ background: activeTab === 'url' ? 'rgba(99, 102, 241, 0.2)' : 'transparent', color: activeTab === 'url' ? 'var(--primary)' : '#94a3b8', border: 'none', padding: '8px 16px', borderRadius: '8px', cursor: 'pointer', fontWeight: 600 }}>Website URL</button>
-                  <button onClick={() => setActiveTab('api')} style={{ background: activeTab === 'api' ? 'rgba(99, 102, 241, 0.2)' : 'transparent', color: activeTab === 'api' ? 'var(--primary)' : '#94a3b8', border: 'none', padding: '8px 16px', borderRadius: '8px', cursor: 'pointer', fontWeight: 600 }}>API Endpoint</button>
-                  <button onClick={() => setActiveTab('upload')} style={{ background: activeTab === 'upload' ? 'rgba(99, 102, 241, 0.2)' : 'transparent', color: activeTab === 'upload' ? 'var(--primary)' : '#94a3b8', border: 'none', padding: '8px 16px', borderRadius: '8px', cursor: 'pointer', fontWeight: 600 }}>Upload System</button>
-                </div>
+            <h3 style={{ textAlign: 'center', marginBottom: '30px', fontSize: '1.5rem' }}>Start Your Audit</h3>
+            
+            {/* Tabs */}
+            <div style={{ display: 'flex', gap: '10px', marginBottom: '20px', borderBottom: '1px solid rgba(255,255,255,0.1)', paddingBottom: '15px' }}>
+              <button onClick={() => setActiveTab('url')} style={{ background: activeTab === 'url' ? 'rgba(99, 102, 241, 0.2)' : 'transparent', color: activeTab === 'url' ? 'var(--primary)' : '#94a3b8', border: 'none', padding: '8px 16px', borderRadius: '8px', cursor: 'pointer', fontWeight: 600 }}>Website URL</button>
+              <button onClick={() => setActiveTab('api')} style={{ background: activeTab === 'api' ? 'rgba(99, 102, 241, 0.2)' : 'transparent', color: activeTab === 'api' ? 'var(--primary)' : '#94a3b8', border: 'none', padding: '8px 16px', borderRadius: '8px', cursor: 'pointer', fontWeight: 600 }}>API Endpoint</button>
+              <button onClick={() => setActiveTab('upload')} style={{ background: activeTab === 'upload' ? 'rgba(99, 102, 241, 0.2)' : 'transparent', color: activeTab === 'upload' ? 'var(--primary)' : '#94a3b8', border: 'none', padding: '8px 16px', borderRadius: '8px', cursor: 'pointer', fontWeight: 600 }}>Upload System</button>
+            </div>
 
-                <form onSubmit={handleStartAudit} style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
-                  <div style={{ display: 'flex', flexDirection: 'column', gap: '8px', textAlign: 'left' }}>
-                    <label style={{ fontSize: '0.9rem', color: '#cbd5e1', fontWeight: 500 }}>Enter your AI system URL</label>
-                    <input 
-                      type="text" 
-                      placeholder="https://your-ai-system.com" 
-                      value={input}
-                      onChange={(e) => setInput(e.target.value)}
-                      disabled={isLoading}
-                      style={{ padding: '16px', borderRadius: '12px', border: '1px solid rgba(255,255,255,0.2)', background: 'rgba(0,0,0,0.3)', color: 'white', fontSize: '1rem', width: '100%' }}
-                    />
-                  </div>
-                  <button type="submit" className="btn btn-primary" disabled={isLoading} style={{ width: '100%', padding: '16px', fontSize: '1.1rem' }}>
-                    Start Audit
-                  </button>
-                  <p style={{ textAlign: 'center', fontSize: '0.85rem', color: '#64748b', marginTop: '10px' }}>
-                    Free scan included. Full report available with certification.
-                  </p>
-                </form>
-              </>
-            )}
+            <form onSubmit={handleStartAudit} style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '8px', textAlign: 'left' }}>
+                <label style={{ fontSize: '0.9rem', color: '#cbd5e1', fontWeight: 500 }}>Enter your AI system URL</label>
+                <input 
+                  type="text" 
+                  placeholder="https://your-ai-system.com" 
+                  value={input}
+                  onChange={(e) => setInput(e.target.value)}
+                  disabled={isLoading}
+                  style={{ padding: '16px', borderRadius: '12px', border: '1px solid rgba(255,255,255,0.2)', background: 'rgba(0,0,0,0.3)', color: 'white', fontSize: '1rem', width: '100%' }}
+                />
+              </div>
+              <button type="submit" className="btn btn-primary" disabled={isLoading} style={{ width: '100%', padding: '16px', fontSize: '1.1rem' }}>
+                {isLoading ? 'Connecting...' : 'Start Audit'}
+              </button>
+              <p style={{ textAlign: 'center', fontSize: '0.85rem', color: '#64748b', marginTop: '10px' }}>
+                Free scan included. Full report available with certification.
+              </p>
+            </form>
           </div>
 
           {/* Features Section */}

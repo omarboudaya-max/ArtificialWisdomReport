@@ -10,23 +10,31 @@ const steps = [
   "Generating Certification Report..."
 ];
 
-const AuditProgress: React.FC<{ targetUrl?: string }> = ({ targetUrl }) => {
+const AuditProgress: React.FC<{ targetUrl?: string, isComplete?: boolean }> = ({ targetUrl, isComplete = false }) => {
   const [currentStep, setCurrentStep] = useState(0);
   const [progress, setProgress] = useState(0);
 
   useEffect(() => {
-    const interval = setInterval(() => {
-      setProgress(prev => {
-        if (prev >= 100) {
-          clearInterval(interval);
-          return 100;
-        }
-        return prev + 1;
-      });
-    }, 80); // 8 seconds total (80ms * 100)
+    let interval: NodeJS.Timeout;
+    
+    if (isComplete) {
+      setProgress(100);
+    } else {
+      interval = setInterval(() => {
+        setProgress(prev => {
+          // Stall at 95% until isComplete is true
+          if (prev >= 95) {
+            return 95;
+          }
+          return prev + 1;
+        });
+      }, 150); // Slower progress to account for real API time
+    }
 
-    return () => clearInterval(interval);
-  }, []);
+    return () => {
+      if (interval) clearInterval(interval);
+    };
+  }, [isComplete]);
 
   useEffect(() => {
     const stepIndex = Math.min(Math.floor((progress / 100) * steps.length), steps.length - 1);
@@ -79,7 +87,7 @@ const AuditProgress: React.FC<{ targetUrl?: string }> = ({ targetUrl }) => {
       </div>
       
       <p style={{ marginTop: '30px', fontSize: '0.9rem', color: '#94a3b8' }}>
-        This comprehensive audit takes about 8 seconds. Please do not close this window.
+        This comprehensive audit is running in real-time. Please do not close this window.
       </p>
     </div>
   );
