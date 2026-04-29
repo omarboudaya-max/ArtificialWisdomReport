@@ -190,7 +190,7 @@ function DashboardContent() {
         {/* PageSpeed Style Gauges */}
         <div className="grid" style={{ 
           display: 'grid', 
-          gridTemplateColumns: 'repeat(4, 1fr)', 
+          gridTemplateColumns: 'repeat(auto-fit, minmax(150px, 1fr))', 
           gap: '20px', 
           marginBottom: '60px',
           background: 'rgba(255,255,255,0.02)',
@@ -204,7 +204,7 @@ function DashboardContent() {
           <ScoreGauge score={report.metrics.seo} label="Reliability" />
         </div>
 
-        <div className="grid" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '40px' }}>
+        <div className="grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '40px' }}>
           {/* Left Column: Equations & Technical Details */}
           <div style={{ display: 'flex', flexDirection: 'column', gap: '30px' }}>
             <div className="card glass">

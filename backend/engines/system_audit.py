@@ -30,10 +30,10 @@ class SystemAuditEngine:
             }
 
         try:
-            # Call PageSpeed API
+            # Call PageSpeed API (Aggressive 4-second timeout to ensure fast UX)
             url = f"https://www.googleapis.com/pagespeedonline/v5/runPagespeed?url={self.endpoint}&key={api_key}&category=PERFORMANCE"
             async with httpx.AsyncClient() as client:
-                response = await client.get(url, timeout=30.0)
+                response = await client.get(url, timeout=4.0)
                 if response.status_code == 200:
                     data = response.json()
                     metrics = data['lighthouseResult']['audits']

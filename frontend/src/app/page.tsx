@@ -10,37 +10,22 @@ export default function Home() {
   const [isLoading, setIsLoading] = useState(false);
   const router = useRouter();
 
-  const handleStartAudit = async (e: React.FormEvent) => {
+  const handleStartAudit = (e: React.FormEvent) => {
     e.preventDefault();
     if (!input) return;
     
     setIsLoading(true);
     
+    // Generate ID locally to skip backend cold-start delays completely
     try {
-      const defaultApiUrl = typeof window !== 'undefined' && window.location.hostname !== 'localhost' ? '/api' : 'http://localhost:8000';
-      const apiUrl = process.env.NEXT_PUBLIC_API_URL || defaultApiUrl;
-      const response = await fetch(`${apiUrl}/audit/quick`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ url: input }),
-        cache: 'no-store'
-      });
-      
-      if (response.ok) {
-        const data = await response.json();
-        const auditId = data.audit_id;
-        
-        // Redirect to dashboard immediately to show real-time progress
-        window.location.href = `/dashboard?id=${auditId}`;
-        return;
-      }
+      const url = input || "https://www.investraders.net/";
+      const encodedUrl = btoa(url).replace(/\+/g, '-').replace(/\//g, '_').replace(/=/g, '');
+      const auditId = `audit_${encodedUrl}_${Math.floor(Date.now() / 1000)}`;
+      window.location.href = `/dashboard?id=${auditId}`;
     } catch (error) {
-      console.log("Backend error, using fallback");
+      const fallbackId = `audit_${Date.now()}`;
+      window.location.href = `/dashboard?id=${fallbackId}`;
     }
-    
-    // Fallback redirect if backend fails - still pass the URL so the dashboard can be unique
-    const fallbackId = `audit_${btoa(input).replace(/=/g, '')}_${Date.now()}`;
-    window.location.href = `/dashboard?id=${fallbackId}`;
   };
 
   const [activeTab, setActiveTab] = useState('url');
@@ -48,12 +33,12 @@ export default function Home() {
   return (
     <>
       {/* Header */}
-      <header style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '20px 40px', borderBottom: '1px solid var(--glass-border)' }}>
-        <div style={{ fontSize: '1.5rem', fontWeight: 700, fontFamily: 'var(--font-heading)', display: 'flex', alignItems: 'center' }}>
-          <img src="/logo.png" alt="Artificial Wisdom Logo" style={{ height: '36px', marginRight: '10px' }} />
+      <header style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '20px', borderBottom: '1px solid var(--glass-border)', flexWrap: 'wrap', gap: '15px' }}>
+        <div style={{ fontSize: '1.8rem', fontWeight: 700, fontFamily: 'var(--font-heading)', display: 'flex', alignItems: 'center' }}>
+          <img src="/logo.png" alt="Artificial Wisdom Logo" style={{ height: '48px', marginRight: '12px' }} />
           Artificial Wisdom
         </div>
-        <nav style={{ display: 'flex', gap: '30px', fontWeight: 500 }}>
+        <nav style={{ display: 'flex', gap: '20px', fontWeight: 500, flexWrap: 'wrap' }}>
           <Link href="#features" style={{ color: 'var(--foreground)', textDecoration: 'none' }}>Features</Link>
           <Link href="#how-it-works" style={{ color: 'var(--foreground)', textDecoration: 'none' }}>How It Works</Link>
           <Link href="#pricing" style={{ color: 'var(--foreground)', textDecoration: 'none' }}>Pricing</Link>
@@ -92,10 +77,10 @@ export default function Home() {
             <h3 style={{ textAlign: 'center', marginBottom: '30px', fontSize: '1.5rem' }}>Start Your Audit</h3>
             
             {/* Tabs */}
-            <div style={{ display: 'flex', gap: '10px', marginBottom: '20px', borderBottom: '1px solid rgba(255,255,255,0.1)', paddingBottom: '15px' }}>
-              <button onClick={() => setActiveTab('url')} style={{ background: activeTab === 'url' ? 'rgba(99, 102, 241, 0.2)' : 'transparent', color: activeTab === 'url' ? 'var(--primary)' : '#94a3b8', border: 'none', padding: '8px 16px', borderRadius: '8px', cursor: 'pointer', fontWeight: 600 }}>Website URL</button>
-              <button onClick={() => setActiveTab('api')} style={{ background: activeTab === 'api' ? 'rgba(99, 102, 241, 0.2)' : 'transparent', color: activeTab === 'api' ? 'var(--primary)' : '#94a3b8', border: 'none', padding: '8px 16px', borderRadius: '8px', cursor: 'pointer', fontWeight: 600 }}>API Endpoint</button>
-              <button onClick={() => setActiveTab('upload')} style={{ background: activeTab === 'upload' ? 'rgba(99, 102, 241, 0.2)' : 'transparent', color: activeTab === 'upload' ? 'var(--primary)' : '#94a3b8', border: 'none', padding: '8px 16px', borderRadius: '8px', cursor: 'pointer', fontWeight: 600 }}>Upload System</button>
+            <div style={{ display: 'flex', gap: '10px', marginBottom: '20px', borderBottom: '1px solid rgba(255,255,255,0.1)', paddingBottom: '15px', flexWrap: 'wrap', justifyContent: 'center' }}>
+              <button onClick={() => setActiveTab('url')} style={{ background: activeTab === 'url' ? 'rgba(99, 102, 241, 0.2)' : 'transparent', color: activeTab === 'url' ? 'var(--primary)' : '#94a3b8', border: 'none', padding: '10px 16px', borderRadius: '8px', cursor: 'pointer', fontWeight: 600, flex: '1 1 auto', minWidth: '120px' }}>Website URL</button>
+              <button onClick={() => setActiveTab('api')} style={{ background: activeTab === 'api' ? 'rgba(99, 102, 241, 0.2)' : 'transparent', color: activeTab === 'api' ? 'var(--primary)' : '#94a3b8', border: 'none', padding: '10px 16px', borderRadius: '8px', cursor: 'pointer', fontWeight: 600, flex: '1 1 auto', minWidth: '120px' }}>API Endpoint</button>
+              <button onClick={() => setActiveTab('upload')} style={{ background: activeTab === 'upload' ? 'rgba(99, 102, 241, 0.2)' : 'transparent', color: activeTab === 'upload' ? 'var(--primary)' : '#94a3b8', border: 'none', padding: '10px 16px', borderRadius: '8px', cursor: 'pointer', fontWeight: 600, flex: '1 1 auto', minWidth: '120px' }}>Upload System</button>
             </div>
 
             <form onSubmit={handleStartAudit} style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
@@ -187,8 +172,8 @@ export default function Home() {
         <div style={{ maxWidth: '1200px', margin: '0 auto', display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '40px', marginBottom: '60px' }}>
           
           <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
-            <div style={{ fontSize: '1.5rem', fontWeight: 700, fontFamily: 'var(--font-heading)', display: 'flex', alignItems: 'center' }}>
-              <img src="/logo.png" alt="Artificial Wisdom Logo" style={{ height: '36px', marginRight: '10px' }} />
+            <div style={{ fontSize: '1.8rem', fontWeight: 700, fontFamily: 'var(--font-heading)', display: 'flex', alignItems: 'center' }}>
+              <img src="/logo.png" alt="Artificial Wisdom Logo" style={{ height: '48px', marginRight: '12px' }} />
               Artificial Wisdom
             </div>
             <p style={{ color: '#64748b', fontSize: '0.9rem', lineHeight: '1.6' }}>
