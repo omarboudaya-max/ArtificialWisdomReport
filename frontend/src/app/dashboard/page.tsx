@@ -293,7 +293,16 @@ function DashboardContent() {
         {/* PV Header */}
         <div style={{ display: 'flex', justifyContent: 'space-between', borderBottom: '2px solid #1e293b', paddingBottom: '20px', marginBottom: '30px' }}>
           <div>
-            <div style={{ fontSize: '24px', fontWeight: 'bold', color: '#1e293b' }}>Ψ Artificial Wisdom</div>
+            <div style={{ fontSize: '24px', fontWeight: 'bold', color: '#1e293b', display: 'flex', alignItems: 'center' }}>
+              <svg width="28" height="28" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" style={{ marginRight: '10px' }}>
+                <path d="M14 2H6C4.89543 2 4 2.89543 4 4V20C4 21.1046 4.89543 22 6 22H18C19.1046 22 20 21.1046 20 20V8L14 2Z" fill="#6366f1" />
+                <path d="M14 2V8H20" fill="#ffffff" opacity="0.3" />
+                <rect x="8" y="10" width="8" height="2" rx="1" fill="#ffffff" />
+                <rect x="8" y="14" width="8" height="2" rx="1" fill="#ffffff" />
+                <rect x="8" y="18" width="5" height="2" rx="1" fill="#ffffff" />
+              </svg>
+              Artificial Wisdom
+            </div>
             <div style={{ fontSize: '12px', color: '#64748b', marginTop: '5px' }}>The Global Standard for AI Governance</div>
           </div>
           <div style={{ textAlign: 'right' }}>

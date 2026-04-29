@@ -49,8 +49,14 @@ export default function Home() {
     <>
       {/* Header */}
       <header style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '20px 40px', borderBottom: '1px solid var(--glass-border)' }}>
-        <div style={{ fontSize: '1.5rem', fontWeight: 700, fontFamily: 'var(--font-heading)' }}>
-          <span style={{ color: 'var(--primary)', marginRight: '8px' }}>Ψ</span>
+        <div style={{ fontSize: '1.5rem', fontWeight: 700, fontFamily: 'var(--font-heading)', display: 'flex', alignItems: 'center' }}>
+          <svg width="28" height="28" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" style={{ marginRight: '10px' }}>
+            <path d="M14 2H6C4.89543 2 4 2.89543 4 4V20C4 21.1046 4.89543 22 6 22H18C19.1046 22 20 21.1046 20 20V8L14 2Z" fill="var(--primary)" />
+            <path d="M14 2V8H20" fill="white" opacity="0.2" />
+            <rect x="8" y="10" width="8" height="2" rx="1" fill="white" />
+            <rect x="8" y="14" width="8" height="2" rx="1" fill="white" />
+            <rect x="8" y="18" width="5" height="2" rx="1" fill="white" />
+          </svg>
           Artificial Wisdom
         </div>
         <nav style={{ display: 'flex', gap: '30px', fontWeight: 500 }}>
@@ -187,8 +193,14 @@ export default function Home() {
         <div style={{ maxWidth: '1200px', margin: '0 auto', display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '40px', marginBottom: '60px' }}>
           
           <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
-            <div style={{ fontSize: '1.5rem', fontWeight: 700, fontFamily: 'var(--font-heading)' }}>
-              <span style={{ color: 'var(--primary)', marginRight: '8px' }}>Ψ</span>
+            <div style={{ fontSize: '1.5rem', fontWeight: 700, fontFamily: 'var(--font-heading)', display: 'flex', alignItems: 'center' }}>
+              <svg width="28" height="28" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" style={{ marginRight: '10px' }}>
+                <path d="M14 2H6C4.89543 2 4 2.89543 4 4V20C4 21.1046 4.89543 22 6 22H18C19.1046 22 20 21.1046 20 20V8L14 2Z" fill="var(--primary)" />
+                <path d="M14 2V8H20" fill="white" opacity="0.2" />
+                <rect x="8" y="10" width="8" height="2" rx="1" fill="white" />
+                <rect x="8" y="14" width="8" height="2" rx="1" fill="white" />
+                <rect x="8" y="18" width="5" height="2" rx="1" fill="white" />
+              </svg>
               Artificial Wisdom
             </div>
             <p style={{ color: '#64748b', fontSize: '0.9rem', lineHeight: '1.6' }}>
