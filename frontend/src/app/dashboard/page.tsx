@@ -293,9 +293,9 @@ function DashboardContent() {
         {/* PV Header */}
         <div style={{ display: 'flex', justifyContent: 'space-between', borderBottom: '2px solid #1e293b', paddingBottom: '20px', marginBottom: '30px' }}>
           <div>
-            <div style={{ fontSize: '24px', fontWeight: 'bold', color: '#1e293b', display: 'flex', alignItems: 'center' }}>
-              <img src="/logo.png" alt="Artificial Wisdom Logo" style={{ height: '32px', marginRight: '10px' }} />
-              Artificial Wisdom
+            <div style={{ fontSize: '28px', fontWeight: 'bold', color: '#1e293b', display: 'flex', alignItems: 'center' }}>
+              <img src="/logo.png" alt="Artificial Wisdom Logo" style={{ height: '56px', marginRight: '15px', objectFit: 'contain' }} />
+              <span style={{ transform: 'translateY(4px)' }}>Artificial Wisdom</span>
             </div>
             <div style={{ fontSize: '12px', color: '#64748b', marginTop: '5px' }}>The Global Standard for AI Governance</div>
           </div>
