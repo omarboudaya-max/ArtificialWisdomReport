@@ -36,7 +36,7 @@ export default function Home() {
       <header style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '20px', borderBottom: '1px solid var(--glass-border)', flexWrap: 'wrap', gap: '15px' }}>
         <div style={{ fontSize: '1.8rem', fontWeight: 700, fontFamily: 'var(--font-heading)', display: 'flex', alignItems: 'center' }}>
           <img src="/logo.png" alt="Artificial Wisdom Logo" style={{ height: '72px', marginRight: '15px', objectFit: 'contain' }} />
-          <span style={{ transform: 'translateY(5px)' }}>Artificial Wisdom</span>
+          Artificial Wisdom
         </div>
         <nav style={{ display: 'flex', gap: '20px', fontWeight: 500, flexWrap: 'wrap' }}>
           <Link href="#features" style={{ color: 'var(--foreground)', textDecoration: 'none' }}>Features</Link>
@@ -174,7 +174,7 @@ export default function Home() {
           <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
             <div style={{ fontSize: '1.8rem', fontWeight: 700, fontFamily: 'var(--font-heading)', display: 'flex', alignItems: 'center' }}>
               <img src="/logo.png" alt="Artificial Wisdom Logo" style={{ height: '72px', marginRight: '15px', objectFit: 'contain' }} />
-              <span style={{ transform: 'translateY(5px)' }}>Artificial Wisdom</span>
+              Artificial Wisdom
             </div>
             <p style={{ color: '#64748b', fontSize: '0.9rem', lineHeight: '1.6' }}>
               The global standard for AI governance, trust, and certification.

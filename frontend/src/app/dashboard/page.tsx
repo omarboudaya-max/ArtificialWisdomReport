@@ -295,7 +295,7 @@ function DashboardContent() {
           <div>
             <div style={{ fontSize: '28px', fontWeight: 'bold', color: '#1e293b', display: 'flex', alignItems: 'center' }}>
               <img src="/logo.png" alt="Artificial Wisdom Logo" style={{ height: '56px', marginRight: '15px', objectFit: 'contain' }} />
-              <span style={{ transform: 'translateY(4px)' }}>Artificial Wisdom</span>
+              Artificial Wisdom
             </div>
             <div style={{ fontSize: '12px', color: '#64748b', marginTop: '5px' }}>The Global Standard for AI Governance</div>
           </div>
