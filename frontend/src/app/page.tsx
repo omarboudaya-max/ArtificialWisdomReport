@@ -35,7 +35,7 @@ export default function Home() {
           setIsLoading(false);
           // Use window.location for a hard redirect to clear all state
           window.location.href = `/dashboard?id=${auditId}`;
-        }, 40000);
+        }, 8000);
         return;
       }
     } catch (error) {
@@ -47,7 +47,7 @@ export default function Home() {
     setTimeout(() => {
       setIsLoading(false);
       window.location.href = `/dashboard?id=${fallbackId}`;
-    }, 40000);
+    }, 8000);
   };
 
   const [activeTab, setActiveTab] = useState('url');
