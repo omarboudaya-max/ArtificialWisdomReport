@@ -50,13 +50,7 @@ export default function Home() {
       {/* Header */}
       <header style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '20px 40px', borderBottom: '1px solid var(--glass-border)' }}>
         <div style={{ fontSize: '1.5rem', fontWeight: 700, fontFamily: 'var(--font-heading)', display: 'flex', alignItems: 'center' }}>
-          <svg width="28" height="28" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" style={{ marginRight: '10px' }}>
-            <path d="M14 2H6C4.89543 2 4 2.89543 4 4V20C4 21.1046 4.89543 22 6 22H18C19.1046 22 20 21.1046 20 20V8L14 2Z" fill="var(--primary)" />
-            <path d="M14 2V8H20" fill="white" opacity="0.2" />
-            <rect x="8" y="10" width="8" height="2" rx="1" fill="white" />
-            <rect x="8" y="14" width="8" height="2" rx="1" fill="white" />
-            <rect x="8" y="18" width="5" height="2" rx="1" fill="white" />
-          </svg>
+          <img src="/logo.png" alt="Artificial Wisdom Logo" style={{ height: '36px', marginRight: '10px' }} />
           Artificial Wisdom
         </div>
         <nav style={{ display: 'flex', gap: '30px', fontWeight: 500 }}>
@@ -194,13 +188,7 @@ export default function Home() {
           
           <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
             <div style={{ fontSize: '1.5rem', fontWeight: 700, fontFamily: 'var(--font-heading)', display: 'flex', alignItems: 'center' }}>
-              <svg width="28" height="28" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" style={{ marginRight: '10px' }}>
-                <path d="M14 2H6C4.89543 2 4 2.89543 4 4V20C4 21.1046 4.89543 22 6 22H18C19.1046 22 20 21.1046 20 20V8L14 2Z" fill="var(--primary)" />
-                <path d="M14 2V8H20" fill="white" opacity="0.2" />
-                <rect x="8" y="10" width="8" height="2" rx="1" fill="white" />
-                <rect x="8" y="14" width="8" height="2" rx="1" fill="white" />
-                <rect x="8" y="18" width="5" height="2" rx="1" fill="white" />
-              </svg>
+              <img src="/logo.png" alt="Artificial Wisdom Logo" style={{ height: '36px', marginRight: '10px' }} />
               Artificial Wisdom
             </div>
             <p style={{ color: '#64748b', fontSize: '0.9rem', lineHeight: '1.6' }}>
@@ -231,7 +219,7 @@ export default function Home() {
         </div>
         
         <div style={{ maxWidth: '1200px', margin: '0 auto', borderTop: '1px solid rgba(255,255,255,0.05)', paddingTop: '30px', display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '20px' }}>
-          <p style={{ color: '#64748b', fontSize: '0.85rem' }}>© 2024 Artificial Wisdom. All rights reserved.</p>
+          <p style={{ color: '#64748b', fontSize: '0.85rem' }}>© 2026 Artificial Wisdom. All rights reserved.</p>
           <div style={{ display: 'flex', gap: '20px' }}>
             <Link href="#" style={{ color: '#94a3b8', textDecoration: 'none', fontSize: '0.85rem' }}>Twitter</Link>
             <Link href="#" style={{ color: '#94a3b8', textDecoration: 'none', fontSize: '0.85rem' }}>LinkedIn</Link>

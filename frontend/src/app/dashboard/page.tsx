@@ -294,39 +294,33 @@ function DashboardContent() {
         <div style={{ display: 'flex', justifyContent: 'space-between', borderBottom: '2px solid #1e293b', paddingBottom: '20px', marginBottom: '30px' }}>
           <div>
             <div style={{ fontSize: '24px', fontWeight: 'bold', color: '#1e293b', display: 'flex', alignItems: 'center' }}>
-              <svg width="28" height="28" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" style={{ marginRight: '10px' }}>
-                <path d="M14 2H6C4.89543 2 4 2.89543 4 4V20C4 21.1046 4.89543 22 6 22H18C19.1046 22 20 21.1046 20 20V8L14 2Z" fill="#6366f1" />
-                <path d="M14 2V8H20" fill="#ffffff" opacity="0.3" />
-                <rect x="8" y="10" width="8" height="2" rx="1" fill="#ffffff" />
-                <rect x="8" y="14" width="8" height="2" rx="1" fill="#ffffff" />
-                <rect x="8" y="18" width="5" height="2" rx="1" fill="#ffffff" />
-              </svg>
+              <img src="/logo.png" alt="Artificial Wisdom Logo" style={{ height: '32px', marginRight: '10px' }} />
               Artificial Wisdom
             </div>
             <div style={{ fontSize: '12px', color: '#64748b', marginTop: '5px' }}>The Global Standard for AI Governance</div>
           </div>
           <div style={{ textAlign: 'right' }}>
-            <div style={{ fontSize: '20px', fontWeight: 'bold' }}>PROCÈS-VERBAL D'AUDIT</div>
+            <div style={{ fontSize: '20px', fontWeight: 'bold' }}>OFFICIAL AUDIT REPORT</div>
             <div style={{ fontSize: '12px', color: '#64748b' }}>Date: {report.certified_date}</div>
-            <div style={{ fontSize: '12px', color: '#64748b' }}>Réf: {auditId}</div>
+            <div style={{ fontSize: '12px', color: '#64748b' }}>Ref: {auditId}</div>
           </div>
         </div>
 
         {/* PV Body */}
         <div style={{ marginBottom: '30px' }}>
-          <h2 style={{ fontSize: '16px', borderBottom: '1px solid #e2e8f0', paddingBottom: '5px', color: '#334155' }}>1. Informations du Système</h2>
+          <h2 style={{ fontSize: '16px', borderBottom: '1px solid #e2e8f0', paddingBottom: '5px', color: '#334155' }}>1. System Information</h2>
           <table style={{ width: '100%', borderCollapse: 'collapse', marginTop: '10px', fontSize: '14px' }}>
             <tbody>
               <tr>
-                <td style={{ padding: '8px', border: '1px solid #e2e8f0', fontWeight: 'bold', width: '40%', background: '#f8fafc' }}>URL Cible</td>
+                <td style={{ padding: '8px', border: '1px solid #e2e8f0', fontWeight: 'bold', width: '40%', background: '#f8fafc' }}>Target URL</td>
                 <td style={{ padding: '8px', border: '1px solid #e2e8f0' }}>{report.target_url}</td>
               </tr>
               <tr>
-                <td style={{ padding: '8px', border: '1px solid #e2e8f0', fontWeight: 'bold', background: '#f8fafc' }}>Score Global d'Intelligence</td>
+                <td style={{ padding: '8px', border: '1px solid #e2e8f0', fontWeight: 'bold', background: '#f8fafc' }}>Overall Intelligence Score</td>
                 <td style={{ padding: '8px', border: '1px solid #e2e8f0', fontWeight: 'bold', color: report.overall_score >= 85 ? '#16a34a' : '#ea580c' }}>{report.overall_score}/100</td>
               </tr>
               <tr>
-                <td style={{ padding: '8px', border: '1px solid #e2e8f0', fontWeight: 'bold', background: '#f8fafc' }}>Niveau de Risque</td>
+                <td style={{ padding: '8px', border: '1px solid #e2e8f0', fontWeight: 'bold', background: '#f8fafc' }}>Risk Level</td>
                 <td style={{ padding: '8px', border: '1px solid #e2e8f0' }}>{report.risk_level}</td>
               </tr>
             </tbody>
@@ -334,19 +328,19 @@ function DashboardContent() {
         </div>
 
         <div style={{ marginBottom: '30px' }}>
-          <h2 style={{ fontSize: '16px', borderBottom: '1px solid #e2e8f0', paddingBottom: '5px', color: '#334155' }}>2. Métriques du Modèle IA (Performance)</h2>
+          <h2 style={{ fontSize: '16px', borderBottom: '1px solid #e2e8f0', paddingBottom: '5px', color: '#334155' }}>2. AI Model Metrics (Performance)</h2>
           <table style={{ width: '100%', borderCollapse: 'collapse', marginTop: '10px', fontSize: '14px' }}>
             <tbody>
               <tr>
-                <td style={{ padding: '8px', border: '1px solid #e2e8f0', background: '#f8fafc' }}>Précision (Precision)</td>
+                <td style={{ padding: '8px', border: '1px solid #e2e8f0', background: '#f8fafc' }}>Precision</td>
                 <td style={{ padding: '8px', border: '1px solid #e2e8f0' }}>{report.model_details.metrics.precision}</td>
-                <td style={{ padding: '8px', border: '1px solid #e2e8f0', background: '#f8fafc' }}>Rappel (Recall)</td>
+                <td style={{ padding: '8px', border: '1px solid #e2e8f0', background: '#f8fafc' }}>Recall</td>
                 <td style={{ padding: '8px', border: '1px solid #e2e8f0' }}>{report.model_details.metrics.recall}</td>
               </tr>
               <tr>
-                <td style={{ padding: '8px', border: '1px solid #e2e8f0', background: '#f8fafc' }}>Exactitude (Accuracy)</td>
+                <td style={{ padding: '8px', border: '1px solid #e2e8f0', background: '#f8fafc' }}>Accuracy</td>
                 <td style={{ padding: '8px', border: '1px solid #e2e8f0' }}>{report.model_details.metrics.accuracy}</td>
-                <td style={{ padding: '8px', border: '1px solid #e2e8f0', background: '#f8fafc' }}>Score F1</td>
+                <td style={{ padding: '8px', border: '1px solid #e2e8f0', background: '#f8fafc' }}>F1 Score</td>
                 <td style={{ padding: '8px', border: '1px solid #e2e8f0' }}>{report.model_details.metrics.f1_score}</td>
               </tr>
             </tbody>
@@ -354,35 +348,35 @@ function DashboardContent() {
         </div>
 
         <div style={{ marginBottom: '30px' }}>
-          <h2 style={{ fontSize: '16px', borderBottom: '1px solid #e2e8f0', paddingBottom: '5px', color: '#334155' }}>3. Intégrité et Éthique des Données</h2>
+          <h2 style={{ fontSize: '16px', borderBottom: '1px solid #e2e8f0', paddingBottom: '5px', color: '#334155' }}>3. Data Integrity & Ethics</h2>
           <table style={{ width: '100%', borderCollapse: 'collapse', marginTop: '10px', fontSize: '14px' }}>
             <tbody>
               <tr>
-                <td style={{ padding: '8px', border: '1px solid #e2e8f0', fontWeight: 'bold', width: '40%', background: '#f8fafc' }}>Score Éthique Global</td>
+                <td style={{ padding: '8px', border: '1px solid #e2e8f0', fontWeight: 'bold', width: '40%', background: '#f8fafc' }}>Overall Ethics Score</td>
                 <td style={{ padding: '8px', border: '1px solid #e2e8f0' }}>{report.metrics.ethics}/100</td>
               </tr>
               <tr>
-                <td style={{ padding: '8px', border: '1px solid #e2e8f0', fontWeight: 'bold', background: '#f8fafc' }}>Validation de Conformité</td>
-                <td style={{ padding: '8px', border: '1px solid #e2e8f0' }}>Vérification RGPD / Standard ISO effectuée</td>
+                <td style={{ padding: '8px', border: '1px solid #e2e8f0', fontWeight: 'bold', background: '#f8fafc' }}>Compliance Validation</td>
+                <td style={{ padding: '8px', border: '1px solid #e2e8f0' }}>GDPR / ISO Standard Verification Completed</td>
               </tr>
             </tbody>
           </table>
         </div>
 
         <div style={{ marginBottom: '30px' }}>
-          <h2 style={{ fontSize: '16px', borderBottom: '1px solid #e2e8f0', paddingBottom: '5px', color: '#334155' }}>4. Infrastructure et Sécurité</h2>
+          <h2 style={{ fontSize: '16px', borderBottom: '1px solid #e2e8f0', paddingBottom: '5px', color: '#334155' }}>4. Infrastructure & Security</h2>
           <table style={{ width: '100%', borderCollapse: 'collapse', marginTop: '10px', fontSize: '14px' }}>
             <tbody>
               <tr>
-                <td style={{ padding: '8px', border: '1px solid #e2e8f0', background: '#f8fafc', width: '25%' }}>Score de Sécurité</td>
+                <td style={{ padding: '8px', border: '1px solid #e2e8f0', background: '#f8fafc', width: '25%' }}>Security Score</td>
                 <td style={{ padding: '8px', border: '1px solid #e2e8f0', width: '25%' }}>{report.metrics.security}/100</td>
-                <td style={{ padding: '8px', border: '1px solid #e2e8f0', background: '#f8fafc', width: '25%' }}>Fiabilité / SEO</td>
+                <td style={{ padding: '8px', border: '1px solid #e2e8f0', background: '#f8fafc', width: '25%' }}>Reliability / SEO</td>
                 <td style={{ padding: '8px', border: '1px solid #e2e8f0', width: '25%' }}>{report.metrics.seo}/100</td>
               </tr>
               <tr>
-                <td style={{ padding: '8px', border: '1px solid #e2e8f0', background: '#f8fafc' }}>Latence Moyenne</td>
+                <td style={{ padding: '8px', border: '1px solid #e2e8f0', background: '#f8fafc' }}>Average Latency</td>
                 <td style={{ padding: '8px', border: '1px solid #e2e8f0' }}>{report.system_details.latency.average_latency} ms</td>
-                <td style={{ padding: '8px', border: '1px solid #e2e8f0', background: '#f8fafc' }}>Latence P95</td>
+                <td style={{ padding: '8px', border: '1px solid #e2e8f0', background: '#f8fafc' }}>P95 Latency</td>
                 <td style={{ padding: '8px', border: '1px solid #e2e8f0' }}>{report.system_details.latency.p95_latency} ms</td>
               </tr>
             </tbody>
@@ -401,11 +395,11 @@ function DashboardContent() {
         {/* PV Footer & Stamp */}
         <div style={{ marginTop: '50px', borderTop: '2px solid #1e293b', paddingTop: '20px', display: 'flex', justifyContent: 'space-between' }}>
           <div style={{ width: '40%' }}>
-            <p style={{ fontSize: '12px', color: '#64748b' }}>Ce procès-verbal est généré automatiquement par la plateforme Artificial Wisdom et atteste des performances mesurées à la date indiquée.</p>
+            <p style={{ fontSize: '12px', color: '#64748b' }}>This official report is automatically generated by the Artificial Wisdom platform and certifies the performance measured on the indicated date.</p>
           </div>
           <div style={{ textAlign: 'center', width: '40%', border: report.overall_score >= 85 ? '3px solid #16a34a' : '3px solid #ea580c', borderRadius: '10px', padding: '15px', transform: 'rotate(-5deg)' }}>
             <div style={{ fontSize: '18px', fontWeight: 'bold', color: report.overall_score >= 85 ? '#16a34a' : '#ea580c' }}>
-              {report.overall_score >= 85 ? 'CERTIFIÉ CONFORME ✅' : 'NON CONFORME ❌'}
+              {report.overall_score >= 85 ? 'CERTIFIED COMPLIANT ✅' : 'NON-COMPLIANT ❌'}
             </div>
             <div style={{ fontSize: '12px', color: '#64748b', marginTop: '5px' }}>ARTIFICIAL WISDOM AUDIT</div>
           </div>
