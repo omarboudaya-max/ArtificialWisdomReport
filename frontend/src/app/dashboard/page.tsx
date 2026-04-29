@@ -3,6 +3,7 @@
 import { useEffect, useState, Suspense } from 'react';
 import { useSearchParams } from 'next/navigation';
 import Link from 'next/link';
+import { ShieldCheck } from 'lucide-react';
 import CertificationBadge from '@/components/CertificationBadge';
 import AuditProgress from '@/components/AuditProgress';
 import jsPDF from 'jspdf';
@@ -181,8 +182,8 @@ function DashboardContent() {
             </p>
           )}
           <div style={{ marginTop: '20px', display: 'inline-block' }} className="glass">
-            <div style={{ padding: '8px 24px', color: 'var(--secondary)', fontWeight: 700 }}>
-              STATUS: CERTIFIED ✅
+            <div style={{ padding: '8px 24px', color: 'var(--secondary)', fontWeight: 700, display: 'flex', alignItems: 'center', gap: '8px' }}>
+              STATUS: CERTIFIED <ShieldCheck size={20} />
             </div>
           </div>
         </header>

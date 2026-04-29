@@ -4,6 +4,7 @@ import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import AuditProgress from '@/components/AuditProgress';
+import { BrainCircuit, Database, Server, Award, ShieldCheck, Activity } from 'lucide-react';
 
 export default function Home() {
   const [input, setInput] = useState('');
@@ -113,7 +114,7 @@ export default function Home() {
             
             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '30px' }}>
               <div className="card glass" style={{ padding: '40px', textAlign: 'left' }}>
-                <div style={{ fontSize: '2rem', marginBottom: '20px' }}>🧠</div>
+                <div style={{ marginBottom: '20px', color: 'var(--primary)' }}><BrainCircuit size={48} strokeWidth={1.5} /></div>
                 <h3 style={{ fontSize: '1.5rem', marginBottom: '15px' }}>Model Audit</h3>
                 <p style={{ color: '#94a3b8', marginBottom: '25px', lineHeight: '1.6' }}>Evaluate accuracy, precision, recall, F-score, and model explainability using advanced metrics.</p>
                 <ul style={{ color: '#cbd5e1', listStyle: 'none', padding: 0, display: 'flex', flexDirection: 'column', gap: '10px' }}>
@@ -124,7 +125,7 @@ export default function Home() {
               </div>
               
               <div className="card glass" style={{ padding: '40px', textAlign: 'left' }}>
-                <div style={{ fontSize: '2rem', marginBottom: '20px' }}>📊</div>
+                <div style={{ marginBottom: '20px', color: 'var(--secondary)' }}><Database size={48} strokeWidth={1.5} /></div>
                 <h3 style={{ fontSize: '1.5rem', marginBottom: '15px' }}>Data Audit</h3>
                 <p style={{ color: '#94a3b8', marginBottom: '25px', lineHeight: '1.6' }}>Ensure ethical, compliant, and high-quality data usage with bias detection.</p>
                 <ul style={{ color: '#cbd5e1', listStyle: 'none', padding: 0, display: 'flex', flexDirection: 'column', gap: '10px' }}>
@@ -135,7 +136,7 @@ export default function Home() {
               </div>
               
               <div className="card glass" style={{ padding: '40px', textAlign: 'left' }}>
-                <div style={{ fontSize: '2rem', marginBottom: '20px' }}>⚙️</div>
+                <div style={{ marginBottom: '20px', color: '#10b981' }}><Server size={48} strokeWidth={1.5} /></div>
                 <h3 style={{ fontSize: '1.5rem', marginBottom: '15px' }}>Infrastructure Audit</h3>
                 <p style={{ color: '#94a3b8', marginBottom: '25px', lineHeight: '1.6' }}>Evaluate technical robustness, security, and performance at scale.</p>
                 <ul style={{ color: '#cbd5e1', listStyle: 'none', padding: 0, display: 'flex', flexDirection: 'column', gap: '10px' }}>
@@ -157,7 +158,7 @@ export default function Home() {
             </div>
             <div style={{ flex: '1 1 300px', display: 'flex', justifyContent: 'center' }}>
               <div style={{ background: 'rgba(0,0,0,0.3)', padding: '30px', borderRadius: '20px', border: '1px solid rgba(255,255,255,0.1)', textAlign: 'center' }}>
-                <div style={{ fontSize: '3rem', marginBottom: '15px' }}>✅</div>
+                <div style={{ marginBottom: '15px', color: 'var(--secondary)', display: 'flex', justifyContent: 'center' }}><Award size={64} strokeWidth={1.5} /></div>
                 <h4 style={{ color: 'white', marginBottom: '10px', fontSize: '1.2rem' }}>Artificial Wisdom Certified</h4>
                 <p style={{ color: '#94a3b8', fontSize: '0.85rem' }}>Display your commitment to AI governance and ethical AI practices</p>
               </div>
