@@ -45,20 +45,29 @@ function DashboardContent() {
   const auditId = searchParams.get('id') || 'AW-98234-X';
 
   const generatePDF = () => {
-    const input = document.getElementById('report-content');
+    const input = document.getElementById('pv-report-template');
     if (!input) return;
+
+    // Temporarily make it visible for html2canvas to render it properly
+    input.style.left = '0';
+    input.style.top = '0';
+    input.style.zIndex = '-1';
 
     html2canvas(input, { 
       scale: 2,
       useCORS: true,
-      backgroundColor: '#0f172a'
+      backgroundColor: '#ffffff',
+      windowWidth: 794 // Force A4 width
     }).then((canvas) => {
+      // Hide it again
+      input.style.left = '-9999px';
+      
       const imgData = canvas.toDataURL('image/png');
       const pdf = new jsPDF('p', 'mm', 'a4');
       const imgWidth = 210;
       const imgHeight = (canvas.height * imgWidth) / canvas.width;
       pdf.addImage(imgData, 'PNG', 0, 0, imgWidth, imgHeight);
-      pdf.save(`AW-Report-${new Date().getTime()}.pdf`);
+      pdf.save(`AW-PV-Report-${auditId}.pdf`);
     });
   };
 
@@ -258,8 +267,133 @@ function DashboardContent() {
       </div>
 
       <div className="mt-12 text-center" style={{ marginTop: '60px', display: 'flex', gap: '20px', justifyContent: 'center' }}>
-        <button onClick={generatePDF} className="btn btn-secondary" style={{ padding: '15px 40px' }}>Download Full Report (PDF)</button>
+        <button onClick={generatePDF} className="btn btn-secondary" style={{ padding: '15px 40px' }}>Download PV Report (PDF)</button>
         <Link href="/" className="btn btn-primary" style={{ padding: '15px 40px' }}>Start New Audit</Link>
+      </div>
+
+      {/* Hidden PV Report Template for PDF Generation */}
+      <div id="pv-report-template" style={{
+        position: 'absolute',
+        left: '-9999px',
+        top: 0,
+        width: '794px', // Standard A4 width at 96 DPI
+        padding: '60px',
+        background: '#ffffff',
+        color: '#000000',
+        fontFamily: 'Arial, sans-serif',
+        boxSizing: 'border-box'
+      }}>
+        {/* PV Header */}
+        <div style={{ display: 'flex', justifyContent: 'space-between', borderBottom: '2px solid #1e293b', paddingBottom: '20px', marginBottom: '30px' }}>
+          <div>
+            <div style={{ fontSize: '24px', fontWeight: 'bold', color: '#1e293b' }}>Ψ Artificial Wisdom</div>
+            <div style={{ fontSize: '12px', color: '#64748b', marginTop: '5px' }}>The Global Standard for AI Governance</div>
+          </div>
+          <div style={{ textAlign: 'right' }}>
+            <div style={{ fontSize: '20px', fontWeight: 'bold' }}>PROCÈS-VERBAL D'AUDIT</div>
+            <div style={{ fontSize: '12px', color: '#64748b' }}>Date: {report.certified_date}</div>
+            <div style={{ fontSize: '12px', color: '#64748b' }}>Réf: {auditId}</div>
+          </div>
+        </div>
+
+        {/* PV Body */}
+        <div style={{ marginBottom: '30px' }}>
+          <h2 style={{ fontSize: '16px', borderBottom: '1px solid #e2e8f0', paddingBottom: '5px', color: '#334155' }}>1. Informations du Système</h2>
+          <table style={{ width: '100%', borderCollapse: 'collapse', marginTop: '10px', fontSize: '14px' }}>
+            <tbody>
+              <tr>
+                <td style={{ padding: '8px', border: '1px solid #e2e8f0', fontWeight: 'bold', width: '40%', background: '#f8fafc' }}>URL Cible</td>
+                <td style={{ padding: '8px', border: '1px solid #e2e8f0' }}>{report.target_url}</td>
+              </tr>
+              <tr>
+                <td style={{ padding: '8px', border: '1px solid #e2e8f0', fontWeight: 'bold', background: '#f8fafc' }}>Score Global d'Intelligence</td>
+                <td style={{ padding: '8px', border: '1px solid #e2e8f0', fontWeight: 'bold', color: report.overall_score >= 85 ? '#16a34a' : '#ea580c' }}>{report.overall_score}/100</td>
+              </tr>
+              <tr>
+                <td style={{ padding: '8px', border: '1px solid #e2e8f0', fontWeight: 'bold', background: '#f8fafc' }}>Niveau de Risque</td>
+                <td style={{ padding: '8px', border: '1px solid #e2e8f0' }}>{report.risk_level}</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div style={{ marginBottom: '30px' }}>
+          <h2 style={{ fontSize: '16px', borderBottom: '1px solid #e2e8f0', paddingBottom: '5px', color: '#334155' }}>2. Métriques du Modèle IA (Performance)</h2>
+          <table style={{ width: '100%', borderCollapse: 'collapse', marginTop: '10px', fontSize: '14px' }}>
+            <tbody>
+              <tr>
+                <td style={{ padding: '8px', border: '1px solid #e2e8f0', background: '#f8fafc' }}>Précision (Precision)</td>
+                <td style={{ padding: '8px', border: '1px solid #e2e8f0' }}>{report.model_details.metrics.precision}</td>
+                <td style={{ padding: '8px', border: '1px solid #e2e8f0', background: '#f8fafc' }}>Rappel (Recall)</td>
+                <td style={{ padding: '8px', border: '1px solid #e2e8f0' }}>{report.model_details.metrics.recall}</td>
+              </tr>
+              <tr>
+                <td style={{ padding: '8px', border: '1px solid #e2e8f0', background: '#f8fafc' }}>Exactitude (Accuracy)</td>
+                <td style={{ padding: '8px', border: '1px solid #e2e8f0' }}>{report.model_details.metrics.accuracy}</td>
+                <td style={{ padding: '8px', border: '1px solid #e2e8f0', background: '#f8fafc' }}>Score F1</td>
+                <td style={{ padding: '8px', border: '1px solid #e2e8f0' }}>{report.model_details.metrics.f1_score}</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div style={{ marginBottom: '30px' }}>
+          <h2 style={{ fontSize: '16px', borderBottom: '1px solid #e2e8f0', paddingBottom: '5px', color: '#334155' }}>3. Intégrité et Éthique des Données</h2>
+          <table style={{ width: '100%', borderCollapse: 'collapse', marginTop: '10px', fontSize: '14px' }}>
+            <tbody>
+              <tr>
+                <td style={{ padding: '8px', border: '1px solid #e2e8f0', fontWeight: 'bold', width: '40%', background: '#f8fafc' }}>Score Éthique Global</td>
+                <td style={{ padding: '8px', border: '1px solid #e2e8f0' }}>{report.metrics.ethics}/100</td>
+              </tr>
+              <tr>
+                <td style={{ padding: '8px', border: '1px solid #e2e8f0', fontWeight: 'bold', background: '#f8fafc' }}>Validation de Conformité</td>
+                <td style={{ padding: '8px', border: '1px solid #e2e8f0' }}>Vérification RGPD / Standard ISO effectuée</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div style={{ marginBottom: '30px' }}>
+          <h2 style={{ fontSize: '16px', borderBottom: '1px solid #e2e8f0', paddingBottom: '5px', color: '#334155' }}>4. Infrastructure et Sécurité</h2>
+          <table style={{ width: '100%', borderCollapse: 'collapse', marginTop: '10px', fontSize: '14px' }}>
+            <tbody>
+              <tr>
+                <td style={{ padding: '8px', border: '1px solid #e2e8f0', background: '#f8fafc', width: '25%' }}>Score de Sécurité</td>
+                <td style={{ padding: '8px', border: '1px solid #e2e8f0', width: '25%' }}>{report.metrics.security}/100</td>
+                <td style={{ padding: '8px', border: '1px solid #e2e8f0', background: '#f8fafc', width: '25%' }}>Fiabilité / SEO</td>
+                <td style={{ padding: '8px', border: '1px solid #e2e8f0', width: '25%' }}>{report.metrics.seo}/100</td>
+              </tr>
+              <tr>
+                <td style={{ padding: '8px', border: '1px solid #e2e8f0', background: '#f8fafc' }}>Latence Moyenne</td>
+                <td style={{ padding: '8px', border: '1px solid #e2e8f0' }}>{report.system_details.latency.average_latency} ms</td>
+                <td style={{ padding: '8px', border: '1px solid #e2e8f0', background: '#f8fafc' }}>Latence P95</td>
+                <td style={{ padding: '8px', border: '1px solid #e2e8f0' }}>{report.system_details.latency.p95_latency} ms</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div style={{ marginBottom: '40px' }}>
+          <h2 style={{ fontSize: '16px', borderBottom: '1px solid #e2e8f0', paddingBottom: '5px', color: '#334155' }}>5. Conclusions & Observations</h2>
+          <ul style={{ fontSize: '14px', marginTop: '10px', paddingLeft: '20px' }}>
+            {report.insights.map((insight: string, i: number) => (
+              <li key={i} style={{ marginBottom: '8px' }}>{insight}</li>
+            ))}
+          </ul>
+        </div>
+
+        {/* PV Footer & Stamp */}
+        <div style={{ marginTop: '50px', borderTop: '2px solid #1e293b', paddingTop: '20px', display: 'flex', justifyContent: 'space-between' }}>
+          <div style={{ width: '40%' }}>
+            <p style={{ fontSize: '12px', color: '#64748b' }}>Ce procès-verbal est généré automatiquement par la plateforme Artificial Wisdom et atteste des performances mesurées à la date indiquée.</p>
+          </div>
+          <div style={{ textAlign: 'center', width: '40%', border: report.overall_score >= 85 ? '3px solid #16a34a' : '3px solid #ea580c', borderRadius: '10px', padding: '15px', transform: 'rotate(-5deg)' }}>
+            <div style={{ fontSize: '18px', fontWeight: 'bold', color: report.overall_score >= 85 ? '#16a34a' : '#ea580c' }}>
+              {report.overall_score >= 85 ? 'CERTIFIÉ CONFORME ✅' : 'NON CONFORME ❌'}
+            </div>
+            <div style={{ fontSize: '12px', color: '#64748b', marginTop: '5px' }}>ARTIFICIAL WISDOM AUDIT</div>
+          </div>
+        </div>
       </div>
     </div>
   );
