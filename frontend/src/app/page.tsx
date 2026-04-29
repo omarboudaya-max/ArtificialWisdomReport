@@ -50,7 +50,7 @@ export default function Home() {
       {/* Header */}
       <header style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '20px 40px', borderBottom: '1px solid var(--glass-border)' }}>
         <div style={{ fontSize: '1.5rem', fontWeight: 700, fontFamily: 'var(--font-heading)', display: 'flex', alignItems: 'center' }}>
-          <img src="/logo.jpg" alt="Artificial Wisdom Logo" style={{ height: '36px', marginRight: '10px' }} />
+          <img src="/logo.png" alt="Artificial Wisdom Logo" style={{ height: '36px', marginRight: '10px' }} />
           Artificial Wisdom
         </div>
         <nav style={{ display: 'flex', gap: '30px', fontWeight: 500 }}>
@@ -188,7 +188,7 @@ export default function Home() {
           
           <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
             <div style={{ fontSize: '1.5rem', fontWeight: 700, fontFamily: 'var(--font-heading)', display: 'flex', alignItems: 'center' }}>
-              <img src="/logo.jpg" alt="Artificial Wisdom Logo" style={{ height: '36px', marginRight: '10px' }} />
+              <img src="/logo.png" alt="Artificial Wisdom Logo" style={{ height: '36px', marginRight: '10px' }} />
               Artificial Wisdom
             </div>
             <p style={{ color: '#64748b', fontSize: '0.9rem', lineHeight: '1.6' }}>

@@ -294,7 +294,7 @@ function DashboardContent() {
         <div style={{ display: 'flex', justifyContent: 'space-between', borderBottom: '2px solid #1e293b', paddingBottom: '20px', marginBottom: '30px' }}>
           <div>
             <div style={{ fontSize: '24px', fontWeight: 'bold', color: '#1e293b', display: 'flex', alignItems: 'center' }}>
-              <img src="/logo.jpg" alt="Artificial Wisdom Logo" style={{ height: '32px', marginRight: '10px' }} />
+              <img src="/logo.png" alt="Artificial Wisdom Logo" style={{ height: '32px', marginRight: '10px' }} />
               Artificial Wisdom
             </div>
             <div style={{ fontSize: '12px', color: '#64748b', marginTop: '5px' }}>The Global Standard for AI Governance</div>
