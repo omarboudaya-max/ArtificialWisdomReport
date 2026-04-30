@@ -50,7 +50,7 @@ export async function POST(req: Request) {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          model: 'llama3-8b-8192', // Using 8B for better availability/speed
+          model: 'llama-3.1-8b-instant', // Current fast model on Groq
           messages: apiMessages,
           temperature: 0.7,
           max_tokens: 500,
