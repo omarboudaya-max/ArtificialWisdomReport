@@ -41,28 +41,35 @@ export async function POST(req: Request) {
       })),
     ];
 
-    const response = await fetch('https://api.groq.com/openai/v1/chat/completions', {
-      method: 'POST',
-      headers: {
-        'Authorization': `Bearer ${groqApiKey}`,
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        model: 'llama3-70b-8192',
-        messages: apiMessages,
-        temperature: 0.7,
-        max_tokens: 500,
-      }),
-    });
+    let response;
+    try {
+      response = await fetch('https://api.groq.com/openai/v1/chat/completions', {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${groqApiKey}`,
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          model: 'llama3-8b-8192', // Using 8B for better availability/speed
+          messages: apiMessages,
+          temperature: 0.7,
+          max_tokens: 500,
+        }),
+      });
+    } catch (fetchErr: any) {
+      console.error('CRITICAL FETCH ERROR:', fetchErr);
+      return NextResponse.json({ error: 'Network error reaching Groq: ' + fetchErr.message }, { status: 502 });
+    }
 
     if (!response.ok) {
-      const errorData = await response.text();
-      console.error('Groq API Error:', errorData);
-      return NextResponse.json({ error: 'Failed to fetch response from AI' }, { status: 500 });
+      const errorText = await response.text();
+      console.error('Groq API Error Status:', response.status);
+      console.error('Groq API Error Body:', errorText);
+      return NextResponse.json({ error: 'Groq API returned error: ' + errorText }, { status: response.status });
     }
 
     const data = await response.json();
-    const reply = data.choices[0]?.message?.content || "I'm sorry, I couldn't generate a response.";
+    const reply = data.choices?.[0]?.message?.content || "I'm sorry, I couldn't generate a response.";
 
     return NextResponse.json({ reply });
 

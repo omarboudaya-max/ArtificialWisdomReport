@@ -72,9 +72,9 @@ export default function Chatbot() {
 
       const data = await response.json();
       setMessages((prev) => [...prev, { role: 'assistant', content: data.reply }]);
-    } catch (error) {
+    } catch (error: any) {
       console.error('Chat Error:', error);
-      setMessages((prev) => [...prev, { role: 'assistant', content: "I'm having trouble connecting to my servers right now. Please ensure you've restarted your dev server and set the API key." }]);
+      setMessages((prev) => [...prev, { role: 'assistant', content: `Error: ${error.message || "Connection failed"}. Please check your terminal logs for details.` }]);
     } finally {
       setIsLoading(false);
     }
