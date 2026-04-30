@@ -20,11 +20,15 @@ export default function Chatbot() {
 
   // Show greeting pop-up shortly after entering the site
   useEffect(() => {
+    const hasSeenGreeting = sessionStorage.getItem('hasSeenGreeting');
+    if (hasSeenGreeting) return;
+
     const timer = setTimeout(() => {
       if (!isOpen) {
         setShowGreeting(true);
+        sessionStorage.setItem('hasSeenGreeting', 'true');
       }
-    }, 2000);
+    }, 3000);
     return () => clearTimeout(timer);
   }, [isOpen]);
 
@@ -53,6 +57,7 @@ export default function Chatbot() {
     setIsLoading(true);
 
     try {
+      console.log('Sending messages to WisdomBot:', newMessages);
       const response = await fetch('/api/chat', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -60,14 +65,16 @@ export default function Chatbot() {
       });
 
       if (!response.ok) {
+        const errorData = await response.json().catch(() => ({}));
+        console.error('API Response Error:', errorData);
         throw new Error('Failed to fetch response');
       }
 
       const data = await response.json();
       setMessages((prev) => [...prev, { role: 'assistant', content: data.reply }]);
     } catch (error) {
-      console.error(error);
-      setMessages((prev) => [...prev, { role: 'assistant', content: "I'm having trouble connecting to my servers right now. Please try again later." }]);
+      console.error('Chat Error:', error);
+      setMessages((prev) => [...prev, { role: 'assistant', content: "I'm having trouble connecting to my servers right now. Please ensure you've restarted your dev server and set the API key." }]);
     } finally {
       setIsLoading(false);
     }
@@ -111,9 +118,10 @@ export default function Chatbot() {
         <div 
           className="glass animate-fade"
           style={{ 
-            width: '350px', 
-            height: '500px', 
-            maxHeight: '80vh',
+            width: 'calc(100vw - 40px)',
+            maxWidth: '380px', 
+            height: '600px', 
+            maxHeight: '70vh',
             marginBottom: '20px', 
             borderRadius: '24px', 
             display: 'flex', 
