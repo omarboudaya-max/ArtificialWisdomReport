@@ -228,7 +228,15 @@ input[type="text"]:focus {
     flex-direction: column !important;
     align-items: center !important;
     text-align: center !important;
-    gap: 20px !important;
+    gap: 30px !important;
+  }
+
+  .stats-row {
+    gap: 30px !important;
+  }
+
+  .stats-number {
+    font-size: 2rem !important;
   }
 
   .mobile-hide {
@@ -261,6 +269,18 @@ input[type="text"]:focus {
 
   .logo-img {
     height: 60px !important;
+  }
+
+  .stats-number {
+    font-size: 1.8rem !important;
+  }
+
+  .gauge-container {
+    transform: scale(0.9); /* Scale down gauges on very small screens */
+  }
+
+  .grid-padding-mobile {
+    padding: 20px !important; /* Reduce padding of grid containers */
   }
 }
 

@@ -189,7 +189,7 @@ function DashboardContent() {
         </header>eader>
 
         {/* PageSpeed Style Gauges */}
-        <div className="grid" style={{ 
+        <div className="grid grid-padding-mobile" style={{ 
           display: 'grid', 
           gridTemplateColumns: 'repeat(auto-fit, minmax(150px, 1fr))', 
           gap: '20px', 

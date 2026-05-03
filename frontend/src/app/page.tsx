@@ -57,17 +57,17 @@ export default function Home() {
             </p>
             
             {/* Stats Row */}
-            <div className="flex-responsive" style={{ display: 'flex', justifyContent: 'center', gap: '60px', marginBottom: '60px', flexWrap: 'wrap' }}>
+            <div className="flex-responsive stats-row" style={{ display: 'flex', justifyContent: 'center', gap: '60px', marginBottom: '60px', flexWrap: 'wrap' }}>
               <div style={{ textAlign: 'center' }}>
-                <div style={{ fontSize: '2.5rem', fontWeight: 700, color: 'var(--primary)' }}>500+</div>
+                <div className="stats-number" style={{ fontSize: '2.5rem', fontWeight: 700, color: 'var(--primary)' }}>500+</div>
                 <div style={{ color: '#94a3b8', fontSize: '0.8rem', textTransform: 'uppercase', letterSpacing: '1px' }}>Systems Audited</div>
               </div>
               <div style={{ textAlign: 'center' }}>
-                <div style={{ fontSize: '2.5rem', fontWeight: 700, color: 'var(--primary)' }}>99.9%</div>
+                <div className="stats-number" style={{ fontSize: '2.5rem', fontWeight: 700, color: 'var(--primary)' }}>99.9%</div>
                 <div style={{ color: '#94a3b8', fontSize: '0.8rem', textTransform: 'uppercase', letterSpacing: '1px' }}>Uptime</div>
               </div>
               <div style={{ textAlign: 'center' }}>
-                <div style={{ fontSize: '2.5rem', fontWeight: 700, color: 'var(--primary)' }}>24/7</div>
+                <div className="stats-number" style={{ fontSize: '2.5rem', fontWeight: 700, color: 'var(--primary)' }}>24/7</div>
                 <div style={{ color: '#94a3b8', fontSize: '0.8rem', textTransform: 'uppercase', letterSpacing: '1px' }}>Support</div>
               </div>
             </div>
