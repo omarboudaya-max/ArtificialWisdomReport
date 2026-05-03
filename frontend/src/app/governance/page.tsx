@@ -17,28 +17,28 @@ export default function Governance() {
         <p style={{ color: '#64748b' }}>Overview of all audited systems within your organization.</p>
       </header>
 
-      <div className="grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '20px', marginBottom: '40px' }}>
-        <div className="card glass">
+      <div className="flex-responsive" style={{ display: 'flex', gap: '20px', marginBottom: '40px' }}>
+        <div className="card glass" style={{ flex: 1, minWidth: '150px' }}>
           <h3 style={{ fontSize: '1.5rem' }}>4</h3>
           <p style={{ fontSize: '0.8rem', color: '#64748b' }}>Total Systems</p>
         </div>
-        <div className="card glass">
+        <div className="card glass" style={{ flex: 1, minWidth: '150px' }}>
           <h3 style={{ fontSize: '1.5rem', color: '#10b981' }}>3</h3>
           <p style={{ fontSize: '0.8rem', color: '#64748b' }}>Compliant</p>
         </div>
-        <div className="card glass">
+        <div className="card glass" style={{ flex: 1, minWidth: '150px' }}>
           <h3 style={{ fontSize: '1.5rem', color: '#ef4444' }}>1</h3>
           <p style={{ fontSize: '0.8rem', color: '#64748b' }}>Non-Compliant</p>
         </div>
-        <div className="card glass">
+        <div className="card glass" style={{ flex: 1, minWidth: '150px' }}>
           <h3 style={{ fontSize: '1.5rem', color: '#3b82f6' }}>81.5%</h3>
           <p style={{ fontSize: '0.8rem', color: '#64748b' }}>Avg. Wisdom Score</p>
         </div>
       </div>
 
-      <div className="card glass" style={{ overflow: 'hidden', padding: '0' }}>
-        <table style={{ width: '100%', borderCollapse: 'collapse', textAlign: 'left' }}>
-          <thead style={{ background: '#f8fafc', borderBottom: '1px solid #e2e8f0' }}>
+      <div className="card glass" style={{ overflowX: 'auto', padding: '0' }}>
+        <table style={{ width: '100%', borderCollapse: 'collapse', textAlign: 'left', minWidth: '600px' }}>
+          <thead style={{ background: 'rgba(255,255,255,0.05)', borderBottom: '1px solid rgba(255,255,255,0.1)' }}>
             <tr>
               <th style={{ padding: '15px 20px' }}>System Name</th>
               <th style={{ padding: '15px 20px' }}>Wisdom Score</th>
@@ -49,14 +49,14 @@ export default function Governance() {
           </thead>
           <tbody>
             {mockSystems.map((system, i) => (
-              <tr key={i} style={{ borderBottom: '1px solid #f1f5f9' }}>
+              <tr key={i} style={{ borderBottom: '1px solid rgba(255,255,255,0.05)' }}>
                 <td style={{ padding: '15px 20px', fontWeight: 600 }}>{system.name}</td>
                 <td style={{ padding: '15px 20px' }}>
                   <span style={{ 
                     padding: '4px 10px', 
                     borderRadius: '4px', 
-                    background: system.score > 80 ? '#f0fdf4' : '#fef2f2',
-                    color: system.score > 80 ? '#166534' : '#991b1b',
+                    background: system.score > 80 ? 'rgba(16, 185, 129, 0.1)' : 'rgba(239, 68, 68, 0.1)',
+                    color: system.score > 80 ? '#10b981' : '#ef4444',
                     fontWeight: 700
                   }}>
                     {system.score}%
@@ -65,7 +65,7 @@ export default function Governance() {
                 <td style={{ padding: '15px 20px' }}>{system.status}</td>
                 <td style={{ padding: '15px 20px' }}>{system.risk}</td>
                 <td style={{ padding: '15px 20px' }}>
-                  <Link href="/dashboard" style={{ color: '#3b82f6', textDecoration: 'none', fontWeight: 600 }}>View Report</Link>
+                  <Link href="/dashboard" style={{ color: 'var(--primary)', textDecoration: 'none', fontWeight: 600 }}>View Report</Link>
                 </td>
               </tr>
             ))}

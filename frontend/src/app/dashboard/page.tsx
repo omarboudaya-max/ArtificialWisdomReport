@@ -169,13 +169,13 @@ function DashboardContent() {
 
   return (
     <div className="container py-12 animate-fade">
-      <div id="report-content" style={{ padding: '20px' }}>
-        <header style={{ textAlign: 'center', marginBottom: '60px' }}>
-          <h1 style={{ fontSize: '3rem', marginBottom: '10px' }}>Artificial Wisdom Report</h1>
-          <p style={{ color: '#64748b', fontSize: '1.2rem' }}>
+      <div id="report-content" style={{ padding: '10px' }}>
+        <header style={{ textAlign: 'center', marginBottom: '40px' }}>
+          <h1 className="logo-container" style={{ fontSize: '2.5rem', marginBottom: '10px' }}>Artificial Wisdom Report</h1>
+          <p style={{ color: '#64748b', fontSize: '1.1rem', wordBreak: 'break-all' }}>
             Target: <span style={{ color: 'var(--primary)', fontWeight: 600 }}>{report.target_url || 'investraders.net'}</span>
           </p>
-          <p style={{ color: '#64748b', fontSize: '0.9rem', marginTop: '10px' }}>Audit ID: {auditId} • Certified on {report.certified_date}</p>
+          <p style={{ color: '#64748b', fontSize: '0.85rem', marginTop: '10px' }}>Audit ID: {auditId} • Certified on {report.certified_date}</p>
           {report.is_offline && (
             <p style={{ color: 'var(--score-average)', fontSize: '0.8rem', marginTop: '5px', fontWeight: 600 }}>
               ⚠️ Using Heuristic Offline Scan (Backend connection limited)
@@ -186,7 +186,7 @@ function DashboardContent() {
               STATUS: CERTIFIED <ShieldCheck size={20} />
             </div>
           </div>
-        </header>
+        </header>eader>
 
         {/* PageSpeed Style Gauges */}
         <div className="grid" style={{ 
@@ -274,9 +274,9 @@ function DashboardContent() {
         </div>
       </div>
 
-      <div className="mt-12 text-center" style={{ marginTop: '60px', display: 'flex', gap: '20px', justifyContent: 'center' }}>
-        <button onClick={generatePDF} className="btn btn-secondary" style={{ padding: '15px 40px' }}>Download PV Report (PDF)</button>
-        <Link href="/" className="btn btn-primary" style={{ padding: '15px 40px' }}>Start New Audit</Link>
+      <div className="mt-12 text-center flex-responsive" style={{ marginTop: '60px', display: 'flex', gap: '20px', justifyContent: 'center' }}>
+        <button onClick={generatePDF} className="btn btn-secondary" style={{ padding: '15px 40px', flex: '1 1 auto' }}>Download PV Report (PDF)</button>
+        <Link href="/" className="btn btn-primary" style={{ padding: '15px 40px', flex: '1 1 auto', textDecoration: 'none', display: 'inline-block' }}>Start New Audit</Link>
       </div>
 
       {/* Hidden PV Report Template for PDF Generation */}

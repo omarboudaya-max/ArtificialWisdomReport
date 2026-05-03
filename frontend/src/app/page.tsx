@@ -35,11 +35,11 @@ export default function Home() {
     <>
       {/* Header */}
       <header style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '20px', borderBottom: '1px solid var(--glass-border)', flexWrap: 'wrap', gap: '15px' }}>
-        <div style={{ fontSize: '1.8rem', fontWeight: 700, fontFamily: 'var(--font-heading)', display: 'flex', alignItems: 'center' }}>
-          <img src="/logo.png" alt="Artificial Wisdom Logo" style={{ height: '90px', marginRight: '8px', objectFit: 'contain', transform: 'translateY(4px)' }} />
+        <div className="logo-container" style={{ fontSize: '1.8rem', fontWeight: 700, fontFamily: 'var(--font-heading)', display: 'flex', alignItems: 'center' }}>
+          <img className="logo-img" src="/logo.png" alt="Artificial Wisdom Logo" style={{ height: '90px', marginRight: '8px', objectFit: 'contain', transform: 'translateY(4px)' }} />
           Artificial Wisdom
         </div>
-        <nav style={{ display: 'flex', gap: '20px', fontWeight: 500, flexWrap: 'wrap' }}>
+        <nav className="header-nav" style={{ display: 'flex', gap: '20px', fontWeight: 500, flexWrap: 'wrap' }}>
           <Link href="#features" style={{ color: 'var(--foreground)', textDecoration: 'none' }}>Features</Link>
           <Link href="#how-it-works" style={{ color: 'var(--foreground)', textDecoration: 'none' }}>How It Works</Link>
           <Link href="#pricing" style={{ color: 'var(--foreground)', textDecoration: 'none' }}>Pricing</Link>
@@ -57,18 +57,18 @@ export default function Home() {
             </p>
             
             {/* Stats Row */}
-            <div style={{ display: 'flex', justifyContent: 'center', gap: '60px', marginBottom: '60px' }}>
+            <div className="flex-responsive" style={{ display: 'flex', justifyContent: 'center', gap: '60px', marginBottom: '60px', flexWrap: 'wrap' }}>
               <div style={{ textAlign: 'center' }}>
                 <div style={{ fontSize: '2.5rem', fontWeight: 700, color: 'var(--primary)' }}>500+</div>
-                <div style={{ color: '#94a3b8', fontSize: '0.9rem', textTransform: 'uppercase', letterSpacing: '1px' }}>Systems Audited</div>
+                <div style={{ color: '#94a3b8', fontSize: '0.8rem', textTransform: 'uppercase', letterSpacing: '1px' }}>Systems Audited</div>
               </div>
               <div style={{ textAlign: 'center' }}>
                 <div style={{ fontSize: '2.5rem', fontWeight: 700, color: 'var(--primary)' }}>99.9%</div>
-                <div style={{ color: '#94a3b8', fontSize: '0.9rem', textTransform: 'uppercase', letterSpacing: '1px' }}>Uptime</div>
+                <div style={{ color: '#94a3b8', fontSize: '0.8rem', textTransform: 'uppercase', letterSpacing: '1px' }}>Uptime</div>
               </div>
               <div style={{ textAlign: 'center' }}>
                 <div style={{ fontSize: '2.5rem', fontWeight: 700, color: 'var(--primary)' }}>24/7</div>
-                <div style={{ color: '#94a3b8', fontSize: '0.9rem', textTransform: 'uppercase', letterSpacing: '1px' }}>Support</div>
+                <div style={{ color: '#94a3b8', fontSize: '0.8rem', textTransform: 'uppercase', letterSpacing: '1px' }}>Support</div>
               </div>
             </div>
           </div>
@@ -149,15 +149,15 @@ export default function Home() {
           </div>
 
           {/* Certification Section */}
-          <div className="glass" style={{ background: 'linear-gradient(135deg, rgba(99, 102, 241, 0.1), rgba(6, 182, 212, 0.1))', padding: '60px 40px', borderRadius: '30px', display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '80px', flexWrap: 'wrap', gap: '40px' }}>
-            <div style={{ flex: '1 1 500px', textAlign: 'left' }}>
+          <div className="glass flex-responsive" style={{ background: 'linear-gradient(135deg, rgba(99, 102, 241, 0.1), rgba(6, 182, 212, 0.1))', padding: '60px 40px', borderRadius: '30px', display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '80px', flexWrap: 'wrap', gap: '40px' }}>
+            <div className="mobile-text-center" style={{ flex: '1 1 350px', textAlign: 'left' }}>
               <h2 style={{ fontSize: '2.5rem', marginBottom: '20px' }}>Earn Your Certification Badge</h2>
               <p style={{ color: '#cbd5e1', fontSize: '1.1rem', lineHeight: '1.6' }}>
                 Pass your audit and get an embeddable certification badge to showcase your AI's wisdom. Build trust with your users and stakeholders.
               </p>
             </div>
-            <div style={{ flex: '1 1 300px', display: 'flex', justifyContent: 'center' }}>
-              <div style={{ background: 'rgba(0,0,0,0.3)', padding: '30px', borderRadius: '20px', border: '1px solid rgba(255,255,255,0.1)', textAlign: 'center' }}>
+            <div style={{ flex: '1 1 250px', display: 'flex', justifyContent: 'center' }}>
+              <div style={{ background: 'rgba(0,0,0,0.3)', padding: '30px', borderRadius: '20px', border: '1px solid rgba(255,255,255,0.1)', textAlign: 'center', width: '100%', maxWidth: '300px' }}>
                 <div style={{ marginBottom: '15px', color: 'var(--secondary)', display: 'flex', justifyContent: 'center' }}><Award size={64} strokeWidth={1.5} /></div>
                 <h4 style={{ color: 'white', marginBottom: '10px', fontSize: '1.2rem' }}>Artificial Wisdom Certified</h4>
                 <p style={{ color: '#94a3b8', fontSize: '0.85rem' }}>Display your commitment to AI governance and ethical AI practices</p>

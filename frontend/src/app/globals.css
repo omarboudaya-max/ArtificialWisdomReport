@@ -191,12 +191,18 @@ input[type="text"]:focus {
 }
 
 @media (max-width: 768px) {
+  .hero {
+    padding: 60px 20px;
+  }
+
   .hero h1 {
     font-size: 2.8rem;
+    margin-bottom: 15px;
   }
   
   .hero p {
     font-size: 1.1rem;
+    margin-bottom: 30px;
   }
   
   .input-group {
@@ -206,14 +212,37 @@ input[type="text"]:focus {
   
   .btn {
     width: 100%;
+    padding: 16px;
   }
   
   .grid {
     grid-template-columns: 1fr !important;
+    gap: 20px !important;
   }
   
   .container {
-    padding: 0 20px;
+    padding: 0 15px;
+  }
+
+  .flex-responsive {
+    flex-direction: column !important;
+    align-items: center !important;
+    text-align: center !important;
+    gap: 20px !important;
+  }
+
+  .mobile-hide {
+    display: none !important;
+  }
+
+  .mobile-text-center {
+    text-align: center !important;
+  }
+
+  .header-nav {
+    justify-content: center !important;
+    width: 100%;
+    margin-top: 15px;
   }
 }
 
@@ -224,6 +253,14 @@ input[type="text"]:focus {
   
   .badge-pill {
     font-size: 0.8rem;
+  }
+
+  .logo-container {
+    font-size: 1.4rem !important;
+  }
+
+  .logo-img {
+    height: 60px !important;
   }
 }
 
