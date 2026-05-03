@@ -186,7 +186,7 @@ function DashboardContent() {
               STATUS: CERTIFIED <ShieldCheck size={20} />
             </div>
           </div>
-        </header>eader>
+        </header>
 
         {/* PageSpeed Style Gauges */}
         <div className="grid grid-padding-mobile" style={{ 
