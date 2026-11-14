@@ -1,218 +1,219 @@
-"use client";
+import Link from "next/link";
+import {
+  Activity, ArrowRight, Bot, BrainCircuit, FileCheck2, Gauge, Globe2, Landmark, Languages, Radar as RadarIcon, Scale, ScanSearch, ShieldCheck, Sparkles, Workflow,
+} from "lucide-react";
+import { SiteHeader } from "@/components/site/SiteHeader";
+import { SiteFooter } from "@/components/site/SiteFooter";
+import { QuickScan } from "@/components/site/QuickScan";
+import { getT } from "@/lib/i18n/server";
+import { DIMENSIONS } from "@/lib/engine/types";
+import { FRAMEWORKS } from "@/lib/engine/compliance";
 
-import { useState } from 'react';
-import { useRouter } from 'next/navigation';
-import Link from 'next/link';
-import AuditProgress from '@/components/AuditProgress';
-import { BrainCircuit, Database, Server, Award, ShieldCheck, Activity } from 'lucide-react';
-
-export default function Home() {
-  const [input, setInput] = useState('');
-  const [isLoading, setIsLoading] = useState(false);
-  const router = useRouter();
-
-  const handleStartAudit = (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!input) return;
-    
-    setIsLoading(true);
-    
-    // Generate ID locally to skip backend cold-start delays completely
-    try {
-      const url = input || "https://www.investraders.net/";
-      const encodedUrl = btoa(url).replace(/\+/g, '-').replace(/\//g, '_').replace(/=/g, '');
-      const auditId = `audit_${encodedUrl}_${Math.floor(Date.now() / 1000)}`;
-      window.location.href = `/dashboard?id=${auditId}`;
-    } catch (error) {
-      const fallbackId = `audit_${Date.now()}`;
-      window.location.href = `/dashboard?id=${fallbackId}`;
-    }
-  };
-
-  const [activeTab, setActiveTab] = useState('url');
+export default async function Home() {
+  const { t } = await getT();
+  const modules = [
+    { n: "01", icon: ScanSearch, title: t("m1.title"), desc: t("m1.desc") },
+    { n: "02", icon: Gauge, title: t("m2.title"), desc: t("m2.desc") },
+    { n: "03", icon: ShieldCheck, title: t("m3.title"), desc: t("m3.desc") },
+    { n: "04", icon: Scale, title: t("m4.title"), desc: t("m4.desc") },
+    { n: "05", icon: Landmark, title: t("m5.title"), desc: t("m5.desc") },
+    { n: "06", icon: FileCheck2, title: t("m6.title"), desc: t("m6.desc") },
+    { n: "07", icon: Activity, title: t("m7.title"), desc: t("m7.desc") },
+  ];
+  const steps = [
+    { icon: Workflow, title: t("how.s1"), desc: t("how.s1d") },
+    { icon: Sparkles, title: t("how.s2"), desc: t("how.s2d") },
+    { icon: Gauge, title: t("how.s3"), desc: t("how.s3d") },
+    { icon: FileCheck2, title: t("how.s4"), desc: t("how.s4d") },
+  ];
+  const agentMetrics = ["Monitoring coverage", "Human oversight coverage", "Review latency", "Escalation rate", "Unauthorised action rate", "Tool misuse rate", "Policy violation rate", "Task completion reliability", "Recovery rate", "Delegation integrity", "Action traceability", "Kill-switch effectiveness"];
 
   return (
     <>
-      {/* Header */}
-      <header style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '20px', borderBottom: '1px solid var(--glass-border)', flexWrap: 'wrap', gap: '15px' }}>
-        <div className="logo-container" style={{ fontSize: '1.8rem', fontWeight: 700, fontFamily: 'var(--font-heading)', display: 'flex', alignItems: 'center' }}>
-          <img className="logo-img" src="/logo.png" alt="Artificial Wisdom Logo" style={{ height: '90px', marginRight: '8px', objectFit: 'contain', transform: 'translateY(4px)' }} />
-          Artificial Wisdom
-        </div>
-        <nav className="header-nav" style={{ display: 'flex', gap: '20px', fontWeight: 500, flexWrap: 'wrap' }}>
-          <Link href="#features" style={{ color: 'var(--foreground)', textDecoration: 'none' }}>Features</Link>
-          <Link href="#how-it-works" style={{ color: 'var(--foreground)', textDecoration: 'none' }}>How It Works</Link>
-          <Link href="#pricing" style={{ color: 'var(--foreground)', textDecoration: 'none' }}>Pricing</Link>
-        </nav>
-      </header>
+      <SiteHeader />
+      <main>
+        {/* HERO */}
+        <section className="relative overflow-hidden">
+          <div className="grid-bg pointer-events-none absolute inset-0" />
+          <div className="relative mx-auto max-w-7xl px-4 pb-20 pt-16 text-center sm:px-6 sm:pt-24">
+            <div className="mx-auto mb-6 inline-flex items-center gap-2 rounded-full border border-brand-400/25 bg-brand-500/10 px-3.5 py-1.5 text-xs font-semibold text-brand-200">
+              <span className="h-1.5 w-1.5 rounded-full bg-cyan-glow shadow-[0_0_10px_#22d3ee]" /> {t("hero.badge")}
+            </div>
+            <h1 className="h-display mx-auto max-w-4xl text-4xl font-bold leading-[1.05] sm:text-6xl lg:text-7xl">
+              {t("hero.title1")} <span className="text-gradient">{t("hero.title2")}</span>
+            </h1>
+            <p className="mx-auto mt-6 max-w-3xl text-base leading-relaxed text-ink-300 sm:text-lg">{t("hero.subtitle")}</p>
+            <div className="mt-10">
+              <QuickScan />
+            </div>
+            <div className="mx-auto mt-16 grid max-w-4xl grid-cols-2 gap-4 sm:grid-cols-4">
+              {[
+                ["70+", t("stats.checks")],
+                [String(FRAMEWORKS.filter((f) => f.requirements.length).length), t("stats.frameworks")],
+                ["4", t("stats.languages")],
+                ["≤30", t("stats.seconds")],
+              ].map(([v, l]) => (
+                <div key={l} className="card px-4 py-5">
+                  <div dir="ltr" className="h-display text-3xl font-bold text-gradient">{v}</div>
+                  <div className="mt-1 text-xs font-medium uppercase tracking-wider text-ink-400">{l}</div>
+                </div>
+              ))}
+            </div>
+          </div>
+        </section>
 
-      <main className="hero" style={{ padding: '80px 20px 40px' }}>
-        <div className="container animate-fade" style={{ maxWidth: '1200px' }}>
-          
-          {/* Hero Content */}
-          <div style={{ textAlign: 'center', marginBottom: '60px' }}>
-            <h1>Scan Your AI.<br />Certify Its Wisdom.</h1>
-            <p style={{ maxWidth: '800px', margin: '0 auto 40px', fontSize: '1.2rem', color: '#94a3b8' }}>
-              The global standard for AI governance, trust, and certification. Audit your AI systems in real time and earn your Artificial Wisdom Certification.
-            </p>
-            
-            {/* Stats Row */}
-            <div className="flex-responsive stats-row" style={{ display: 'flex', justifyContent: 'center', gap: '60px', marginBottom: '60px', flexWrap: 'wrap' }}>
-              <div style={{ textAlign: 'center' }}>
-                <div className="stats-number" style={{ fontSize: '2.5rem', fontWeight: 700, color: 'var(--primary)' }}>500+</div>
-                <div style={{ color: '#94a3b8', fontSize: '0.8rem', textTransform: 'uppercase', letterSpacing: '1px' }}>Systems Audited</div>
+        {/* MODULES */}
+        <section id="platform" className="mx-auto max-w-7xl scroll-mt-20 px-4 py-20 sm:px-6">
+          <div className="mx-auto mb-12 max-w-3xl text-center">
+            <h2 className="h-display text-3xl font-bold sm:text-4xl">{t("modules.title")}</h2>
+            <p className="mt-3 text-ink-300">{t("modules.subtitle")}</p>
+          </div>
+          <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+            {modules.map((m) => (
+              <div key={m.n} className="card card-hover group p-6">
+                <div className="mb-5 flex items-center justify-between">
+                  <div className="flex h-11 w-11 items-center justify-center rounded-xl border border-brand-400/20 bg-brand-500/10 text-brand-300 transition group-hover:scale-105"><m.icon size={20} /></div>
+                  <span className="font-mono text-xs text-ink-500">{m.n}</span>
+                </div>
+                <h3 className="h-display text-lg font-semibold">{m.title}</h3>
+                <p className="mt-2 text-sm leading-relaxed text-ink-300">{m.desc}</p>
               </div>
-              <div style={{ textAlign: 'center' }}>
-                <div className="stats-number" style={{ fontSize: '2.5rem', fontWeight: 700, color: 'var(--primary)' }}>99.9%</div>
-                <div style={{ color: '#94a3b8', fontSize: '0.8rem', textTransform: 'uppercase', letterSpacing: '1px' }}>Uptime</div>
-              </div>
-              <div style={{ textAlign: 'center' }}>
-                <div className="stats-number" style={{ fontSize: '2.5rem', fontWeight: 700, color: 'var(--primary)' }}>24/7</div>
-                <div style={{ color: '#94a3b8', fontSize: '0.8rem', textTransform: 'uppercase', letterSpacing: '1px' }}>Support</div>
+            ))}
+            <div className="card relative overflow-hidden p-6 sm:col-span-2 lg:col-span-1">
+              <div className="absolute -end-10 -top-10 h-40 w-40 rounded-full bg-brand-500/20 blur-3xl" />
+              <div className="relative">
+                <div className="text-xs font-semibold uppercase tracking-[0.2em] text-cyan-glow">AW-GTI</div>
+                <div className="h-display mt-2 text-xl font-semibold">Evidence-based, explainable, versioned and independently reviewable.</div>
+                <Link href="/methodology" className="mt-5 inline-flex items-center gap-1.5 text-sm font-semibold text-brand-300 hover:text-white">Read the methodology <ArrowRight size={14} className="rtl:rotate-180" /></Link>
               </div>
             </div>
           </div>
+        </section>
 
-          {/* Audit Input Area */}
-          <div className="glass" style={{ maxWidth: '800px', margin: '0 auto 80px', padding: '40px', borderRadius: '24px' }}>
-            <h3 style={{ textAlign: 'center', marginBottom: '30px', fontSize: '1.5rem' }}>Start Your Audit</h3>
-            
-            {/* Tabs */}
-            <div style={{ display: 'flex', gap: '10px', marginBottom: '20px', borderBottom: '1px solid rgba(255,255,255,0.1)', paddingBottom: '15px', flexWrap: 'wrap', justifyContent: 'center' }}>
-              <button onClick={() => setActiveTab('url')} style={{ background: activeTab === 'url' ? 'rgba(99, 102, 241, 0.2)' : 'transparent', color: activeTab === 'url' ? 'var(--primary)' : '#94a3b8', border: 'none', padding: '10px 16px', borderRadius: '8px', cursor: 'pointer', fontWeight: 600, flex: '1 1 auto', minWidth: '120px' }}>Website URL</button>
-              <button onClick={() => setActiveTab('api')} style={{ background: activeTab === 'api' ? 'rgba(99, 102, 241, 0.2)' : 'transparent', color: activeTab === 'api' ? 'var(--primary)' : '#94a3b8', border: 'none', padding: '10px 16px', borderRadius: '8px', cursor: 'pointer', fontWeight: 600, flex: '1 1 auto', minWidth: '120px' }}>API Endpoint</button>
-              <button onClick={() => setActiveTab('upload')} style={{ background: activeTab === 'upload' ? 'rgba(99, 102, 241, 0.2)' : 'transparent', color: activeTab === 'upload' ? 'var(--primary)' : '#94a3b8', border: 'none', padding: '10px 16px', borderRadius: '8px', cursor: 'pointer', fontWeight: 600, flex: '1 1 auto', minWidth: '120px' }}>Upload System</button>
+        {/* HOW */}
+        <section className="border-y border-white/[0.05] bg-ink-900/40">
+          <div className="mx-auto max-w-7xl px-4 py-20 sm:px-6">
+            <h2 className="h-display mb-12 text-center text-3xl font-bold sm:text-4xl">{t("how.title")}</h2>
+            <div className="grid gap-6 md:grid-cols-4">
+              {steps.map((s, i) => (
+                <div key={s.title} className="relative">
+                  <div className="mb-4 flex items-center gap-3">
+                    <div className="flex h-10 w-10 items-center justify-center rounded-full bg-gradient-to-br from-brand-500 to-cyan-500 font-bold text-white">{i + 1}</div>
+                    <s.icon size={18} className="text-ink-400" />
+                  </div>
+                  <h3 className="h-display text-lg font-semibold">{s.title}</h3>
+                  <p className="mt-2 text-sm leading-relaxed text-ink-300">{s.desc}</p>
+                </div>
+              ))}
             </div>
-
-            <form onSubmit={handleStartAudit} style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
-              <div style={{ display: 'flex', flexDirection: 'column', gap: '8px', textAlign: 'left' }}>
-                <label style={{ fontSize: '0.9rem', color: '#cbd5e1', fontWeight: 500 }}>Enter your AI system URL</label>
-                <input 
-                  type="text" 
-                  placeholder="https://your-ai-system.com" 
-                  value={input}
-                  onChange={(e) => setInput(e.target.value)}
-                  disabled={isLoading}
-                  style={{ padding: '16px', borderRadius: '12px', border: '1px solid rgba(255,255,255,0.2)', background: 'rgba(0,0,0,0.3)', color: 'white', fontSize: '1rem', width: '100%' }}
-                />
-              </div>
-              <button type="submit" className="btn btn-primary" disabled={isLoading} style={{ width: '100%', padding: '16px', fontSize: '1.1rem' }}>
-                {isLoading ? 'Connecting...' : 'Start Audit'}
-              </button>
-              <p style={{ textAlign: 'center', fontSize: '0.85rem', color: '#64748b', marginTop: '10px' }}>
-                Free scan included. Full report available with certification.
-              </p>
-            </form>
           </div>
+        </section>
 
-          {/* Features Section */}
-          <div id="features" style={{ marginBottom: '100px' }}>
-            <div style={{ textAlign: 'center', marginBottom: '50px' }}>
-              <h2 style={{ fontSize: '2.5rem', marginBottom: '15px' }}>Comprehensive AI Auditing</h2>
-              <p style={{ color: '#94a3b8', fontSize: '1.1rem' }}>Multi-layer evaluation across model, data, and infrastructure</p>
+        {/* GTI */}
+        <section className="mx-auto grid max-w-7xl items-center gap-12 px-4 py-20 sm:px-6 lg:grid-cols-2">
+          <div>
+            <div className="text-xs font-semibold uppercase tracking-[0.2em] text-brand-300">Proprietary scoring</div>
+            <h2 className="h-display mt-2 text-3xl font-bold sm:text-4xl">{t("gti.title")}</h2>
+            <p className="mt-3 text-ink-300">{t("gti.subtitle")}</p>
+            <ul className="mt-6 space-y-3 text-sm text-ink-200">
+              <li className="flex gap-3"><ShieldCheck size={18} className="mt-0.5 shrink-0 text-emerald-400" /> Critical gates — exposed secrets, prompt-injection secret leakage, PII disclosure, dangerous-capability compliance, unauthorised tool execution, untested kill switch, prohibited practice — override the rating.</li>
+              <li className="flex gap-3"><RadarIcon size={18} className="mt-0.5 shrink-0 text-cyan-glow" /> Coverage is always reported: untested dimensions are shown as untested, never assumed.</li>
+              <li className="flex gap-3"><BrainCircuit size={18} className="mt-0.5 shrink-0 text-brand-300" /> Technical score, governance score, compliance status and assurance status are reported separately.</li>
+            </ul>
+          </div>
+          <div className="card p-6">
+            <div className="space-y-4">
+              {DIMENSIONS.map((d) => (
+                <div key={d.key}>
+                  <div className="mb-1.5 flex justify-between text-sm"><span className="font-medium">{d.label}</span><span className="font-mono text-brand-300">{d.weight}%</span></div>
+                  <div className="h-2.5 overflow-hidden rounded-full bg-white/[0.05]">
+                    <div className="h-full rounded-full bg-gradient-to-r from-brand-500 to-cyan-glow" style={{ width: `${d.weight * 4}%` }} />
+                  </div>
+                </div>
+              ))}
             </div>
-            
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '30px' }}>
-              <div className="card glass" style={{ padding: '40px', textAlign: 'left' }}>
-                <div style={{ marginBottom: '20px', color: 'var(--primary)' }}><BrainCircuit size={48} strokeWidth={1.5} /></div>
-                <h3 style={{ fontSize: '1.5rem', marginBottom: '15px' }}>Model Audit</h3>
-                <p style={{ color: '#94a3b8', marginBottom: '25px', lineHeight: '1.6' }}>Evaluate accuracy, precision, recall, F-score, and model explainability using advanced metrics.</p>
-                <ul style={{ color: '#cbd5e1', listStyle: 'none', padding: 0, display: 'flex', flexDirection: 'column', gap: '10px' }}>
-                  <li>✓ Performance metrics</li>
-                  <li>✓ Model explainability</li>
-                  <li>✓ Transparency scoring</li>
-                </ul>
+            <p className="mt-5 text-xs text-ink-400">Weights are proposed starting assumptions (v1.0), to be validated through expert review and pilot audits — not an established international standard.</p>
+          </div>
+        </section>
+
+        {/* AGENTIC */}
+        <section className="mx-auto max-w-7xl px-4 pb-20 sm:px-6">
+          <div className="card relative overflow-hidden p-8 sm:p-12">
+            <div className="absolute -start-20 -top-20 h-72 w-72 rounded-full bg-cyan-500/10 blur-3xl" />
+            <div className="relative grid gap-10 lg:grid-cols-[1fr_1.3fr]">
+              <div>
+                <Bot className="text-cyan-glow" size={28} />
+                <h2 className="h-display mt-4 text-3xl font-bold">Agentic AI Assurance Scorecard</h2>
+                <p className="mt-3 text-ink-300">It is no longer enough to grade a chatbot&apos;s answers. Upload agent action logs and measure what agents actually do — which tools they touch, who reviews them, and whether you can stop them.</p>
+                <Link href="/login?mode=signup" className="btn-primary mt-6">Assess an agent <ArrowRight size={15} className="rtl:rotate-180" /></Link>
               </div>
-              
-              <div className="card glass" style={{ padding: '40px', textAlign: 'left' }}>
-                <div style={{ marginBottom: '20px', color: 'var(--secondary)' }}><Database size={48} strokeWidth={1.5} /></div>
-                <h3 style={{ fontSize: '1.5rem', marginBottom: '15px' }}>Data Audit</h3>
-                <p style={{ color: '#94a3b8', marginBottom: '25px', lineHeight: '1.6' }}>Ensure ethical, compliant, and high-quality data usage with bias detection.</p>
-                <ul style={{ color: '#cbd5e1', listStyle: 'none', padding: 0, display: 'flex', flexDirection: 'column', gap: '10px' }}>
-                  <li>✓ Bias detection</li>
-                  <li>✓ GDPR compliance</li>
-                  <li>✓ Data quality check</li>
-                </ul>
-              </div>
-              
-              <div className="card glass" style={{ padding: '40px', textAlign: 'left' }}>
-                <div style={{ marginBottom: '20px', color: '#10b981' }}><Server size={48} strokeWidth={1.5} /></div>
-                <h3 style={{ fontSize: '1.5rem', marginBottom: '15px' }}>Infrastructure Audit</h3>
-                <p style={{ color: '#94a3b8', marginBottom: '25px', lineHeight: '1.6' }}>Evaluate technical robustness, security, and performance at scale.</p>
-                <ul style={{ color: '#cbd5e1', listStyle: 'none', padding: 0, display: 'flex', flexDirection: 'column', gap: '10px' }}>
-                  <li>✓ Security assessment</li>
-                  <li>✓ Latency & scalability</li>
-                  <li>✓ Inference speed</li>
-                </ul>
+              <div className="grid grid-cols-2 gap-2 sm:grid-cols-3">
+                {agentMetrics.map((m) => (
+                  <div key={m} className="rounded-xl border border-white/[0.06] bg-white/[0.02] px-3 py-3 text-sm font-medium text-ink-200">{m}</div>
+                ))}
               </div>
             </div>
           </div>
+        </section>
 
-          {/* Certification Section */}
-          <div className="glass flex-responsive" style={{ background: 'linear-gradient(135deg, rgba(99, 102, 241, 0.1), rgba(6, 182, 212, 0.1))', padding: '60px 40px', borderRadius: '30px', display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '80px', flexWrap: 'wrap', gap: '40px' }}>
-            <div className="mobile-text-center" style={{ flex: '1 1 350px', textAlign: 'left' }}>
-              <h2 style={{ fontSize: '2.5rem', marginBottom: '20px' }}>Earn Your Certification Badge</h2>
-              <p style={{ color: '#cbd5e1', fontSize: '1.1rem', lineHeight: '1.6' }}>
-                Pass your audit and get an embeddable certification badge to showcase your AI's wisdom. Build trust with your users and stakeholders.
-              </p>
+        {/* ARABIC / AFRICA */}
+        <section className="mx-auto max-w-7xl px-4 pb-20 sm:px-6">
+          <div className="grid gap-4 md:grid-cols-3">
+            <div className="card p-6 md:col-span-2">
+              <Languages className="text-brand-300" />
+              <h3 className="h-display mt-3 text-xl font-semibold">Arabic & African AI fairness, built in</h3>
+              <p className="mt-2 text-sm text-ink-300">Every LLM assessment checks accuracy and language parity across English, French, Modern Standard Arabic and Tunisian Darija — because most global evaluations ignore regional languages, dialects and code-switching.</p>
+              <div className="mt-4 flex flex-wrap gap-2 text-sm" dir="auto">
+                {["What is the capital of Japan?", "Quelle est la capitale du Japon ?", "ما هي عاصمة اليابان؟", "شنية عاصمة اليابان؟"].map((q) => (
+                  <span key={q} className="rounded-lg border border-white/10 bg-white/[0.03] px-3 py-1.5">{q}</span>
+                ))}
+              </div>
             </div>
-            <div style={{ flex: '1 1 250px', display: 'flex', justifyContent: 'center' }}>
-              <div style={{ background: 'rgba(0,0,0,0.3)', padding: '30px', borderRadius: '20px', border: '1px solid rgba(255,255,255,0.1)', textAlign: 'center', width: '100%', maxWidth: '300px' }}>
-                <div style={{ marginBottom: '15px', color: 'var(--secondary)', display: 'flex', justifyContent: 'center' }}><Award size={64} strokeWidth={1.5} /></div>
-                <h4 style={{ color: 'white', marginBottom: '10px', fontSize: '1.2rem' }}>Artificial Wisdom Certified</h4>
-                <p style={{ color: '#94a3b8', fontSize: '0.85rem' }}>Display your commitment to AI governance and ethical AI practices</p>
+            <div className="card p-6">
+              <Globe2 className="text-cyan-glow" />
+              <h3 className="h-display mt-3 text-xl font-semibold">Global compliance library</h3>
+              <p className="mt-2 text-sm text-ink-300">Binding law, voluntary standards and guidance kept distinct, applicability by jurisdiction and role.</p>
+              <div className="mt-4 flex flex-wrap gap-1.5">
+                {FRAMEWORKS.map((f) => (
+                  <span key={f.key} className="chip border-white/10 bg-white/[0.03] text-ink-300 normal-case tracking-normal">{f.short}</span>
+                ))}
               </div>
             </div>
           </div>
+        </section>
 
-        </div>
+        {/* TIERS */}
+        <section className="border-t border-white/[0.05] bg-ink-900/40">
+          <div className="mx-auto max-w-7xl px-4 py-20 sm:px-6">
+            <h2 className="h-display mb-10 text-center text-3xl font-bold sm:text-4xl">{t("tiers.title")}</h2>
+            <div className="grid gap-4 md:grid-cols-3">
+              {[
+                { t: t("tiers.t1"), d: t("tiers.t1d"), c: "from-sky-500/20" },
+                { t: t("tiers.t2"), d: t("tiers.t2d"), c: "from-emerald-500/20" },
+                { t: t("tiers.t3"), d: t("tiers.t3d"), c: "from-brand-500/25" },
+              ].map((x, i) => (
+                <div key={x.t} className={`card bg-gradient-to-b ${x.c} to-transparent p-6`}>
+                  <div className="font-mono text-xs text-ink-400">TIER {i + 1}</div>
+                  <h3 className="h-display mt-2 text-xl font-semibold">{x.t}</h3>
+                  <p className="mt-2 text-sm text-ink-300">{x.d}</p>
+                </div>
+              ))}
+            </div>
+            <p className="mx-auto mt-8 max-w-3xl text-center text-sm text-ink-400">{t("tiers.note")}</p>
+          </div>
+        </section>
+
+        {/* CTA */}
+        <section className="mx-auto max-w-7xl px-4 py-24 text-center sm:px-6">
+          <h2 className="h-display text-3xl font-bold sm:text-5xl">{t("cta.title")}</h2>
+          <p className="mx-auto mt-4 max-w-xl text-ink-300">{t("cta.subtitle")}</p>
+          <div className="mt-8 flex flex-wrap justify-center gap-3">
+            <Link href="/login?mode=signup" className="btn-primary px-6 py-3">{t("nav.start")} <ArrowRight size={16} className="rtl:rotate-180" /></Link>
+            <Link href="/methodology" className="btn-secondary px-6 py-3">{t("nav.methodology")}</Link>
+          </div>
+        </section>
       </main>
-
-      {/* Footer */}
-      <footer style={{ borderTop: '1px solid var(--glass-border)', padding: '60px 40px 30px', background: '#090e17' }}>
-        <div style={{ maxWidth: '1200px', margin: '0 auto', display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '40px', marginBottom: '60px' }}>
-          
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
-            <div style={{ fontSize: '1.8rem', fontWeight: 700, fontFamily: 'var(--font-heading)', display: 'flex', alignItems: 'center' }}>
-              <img src="/logo.png" alt="Artificial Wisdom Logo" style={{ height: '90px', marginRight: '8px', objectFit: 'contain', transform: 'translateY(4px)' }} />
-              Artificial Wisdom
-            </div>
-            <p style={{ color: '#64748b', fontSize: '0.9rem', lineHeight: '1.6' }}>
-              The global standard for AI governance, trust, and certification.
-            </p>
-          </div>
-
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '15px' }}>
-            <h4 style={{ color: 'white', fontWeight: 600, marginBottom: '10px' }}>Product</h4>
-            <Link href="#" style={{ color: '#94a3b8', textDecoration: 'none', fontSize: '0.9rem' }}>Features</Link>
-            <Link href="#" style={{ color: '#94a3b8', textDecoration: 'none', fontSize: '0.9rem' }}>Pricing</Link>
-            <Link href="#" style={{ color: '#94a3b8', textDecoration: 'none', fontSize: '0.9rem' }}>Documentation</Link>
-          </div>
-
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '15px' }}>
-            <h4 style={{ color: 'white', fontWeight: 600, marginBottom: '10px' }}>Company</h4>
-            <Link href="#" style={{ color: '#94a3b8', textDecoration: 'none', fontSize: '0.9rem' }}>About</Link>
-            <Link href="#" style={{ color: '#94a3b8', textDecoration: 'none', fontSize: '0.9rem' }}>Blog</Link>
-            <Link href="#" style={{ color: '#94a3b8', textDecoration: 'none', fontSize: '0.9rem' }}>Contact</Link>
-          </div>
-
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '15px' }}>
-            <h4 style={{ color: 'white', fontWeight: 600, marginBottom: '10px' }}>Legal</h4>
-            <Link href="#" style={{ color: '#94a3b8', textDecoration: 'none', fontSize: '0.9rem' }}>Privacy Policy</Link>
-            <Link href="#" style={{ color: '#94a3b8', textDecoration: 'none', fontSize: '0.9rem' }}>Terms of Service</Link>
-          </div>
-
-        </div>
-        
-        <div style={{ maxWidth: '1200px', margin: '0 auto', borderTop: '1px solid rgba(255,255,255,0.05)', paddingTop: '30px', display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '20px' }}>
-          <p style={{ color: '#64748b', fontSize: '0.85rem' }}>© 2026 Artificial Wisdom. All rights reserved.</p>
-          <div style={{ display: 'flex', gap: '20px' }}>
-            <Link href="#" style={{ color: '#94a3b8', textDecoration: 'none', fontSize: '0.85rem' }}>Twitter</Link>
-            <Link href="#" style={{ color: '#94a3b8', textDecoration: 'none', fontSize: '0.85rem' }}>LinkedIn</Link>
-            <Link href="#" style={{ color: '#94a3b8', textDecoration: 'none', fontSize: '0.85rem' }}>GitHub</Link>
-          </div>
-        </div>
-      </footer>
+      <SiteFooter />
     </>
   );
 }

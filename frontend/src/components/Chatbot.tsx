@@ -1,259 +1,75 @@
 "use client";
 
-import React, { useState, useEffect, useRef } from 'react';
-import { MessageSquare, X, Send, Bot, User } from 'lucide-react';
+import { useEffect, useRef, useState } from "react";
+import { usePathname } from "next/navigation";
+import { Bot, Loader2, MessageSquare, Send, X } from "lucide-react";
+import { useT } from "@/lib/i18n/client";
 
-interface Message {
-  role: 'user' | 'assistant';
-  content: string;
-}
+interface Message { role: "user" | "assistant"; content: string }
+
+const GREETING: Record<string, string> = {
+  en: "Hello — I'm the Artificial Wisdom Compliance Copilot. Ask me about the EU AI Act, ISO/IEC 42001, your AW-GTI score or how to fix a finding.",
+  fr: "Bonjour — je suis le Copilote conformité d'Artificial Wisdom. Posez-moi vos questions sur l'AI Act, l'ISO/IEC 42001 ou votre score AW-GTI.",
+  ar: "مرحبًا — أنا مساعد الامتثال في «الحكمة الاصطناعية». اسألني عن قانون الذكاء الاصطناعي الأوروبي أو ISO/IEC 42001 أو مؤشر AW-GTI.",
+};
+const SUGGESTIONS = ["Is my chatbot high-risk under the EU AI Act?", "How is the AW-GTI calculated?", "How do I fix prompt-injection findings?", "What's the difference between a provisional credential and certification?"];
 
 export default function Chatbot() {
-  const [isOpen, setIsOpen] = useState(false);
-  const [showGreeting, setShowGreeting] = useState(false);
-  const [messages, setMessages] = useState<Message[]>([
-    { role: 'assistant', content: 'Hello! I am WisdomBot. How can I help you understand Artificial Wisdom today?' }
-  ]);
-  const [input, setInput] = useState('');
-  const [isLoading, setIsLoading] = useState(false);
-  const messagesEndRef = useRef<HTMLDivElement>(null);
+  const { locale } = useT();
+  const path = usePathname();
+  const [open, setOpen] = useState(false);
+  const [messages, setMessages] = useState<Message[]>([]);
+  const [input, setInput] = useState("");
+  const [loading, setLoading] = useState(false);
+  const end = useRef<HTMLDivElement>(null);
+  useEffect(() => { end.current?.scrollIntoView({ behavior: "smooth" }); }, [messages, loading]);
 
-  // Show greeting pop-up shortly after entering the site
-  useEffect(() => {
-    const hasSeenGreeting = sessionStorage.getItem('hasSeenGreeting');
-    if (hasSeenGreeting) return;
+  if (path?.startsWith("/verify")) return null;
 
-    const timer = setTimeout(() => {
-      if (!isOpen) {
-        setShowGreeting(true);
-        sessionStorage.setItem('hasSeenGreeting', 'true');
-      }
-    }, 3000);
-    return () => clearTimeout(timer);
-  }, [isOpen]);
-
-  // Auto-scroll to bottom of messages
-  useEffect(() => {
-    messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
-  }, [messages, isLoading]);
-
-  const toggleChat = () => {
-    setIsOpen(!isOpen);
-    if (!isOpen) {
-      setShowGreeting(false); // Hide greeting when opened
-    }
-  };
-
-  const handleSendMessage = async (e?: React.FormEvent) => {
-    if (e) e.preventDefault();
-    if (!input.trim() || isLoading) return;
-
-    const userMessage = input.trim();
-    setInput('');
-    
-    // Add user message to UI immediately
-    const newMessages: Message[] = [...messages, { role: 'user', content: userMessage }];
-    setMessages(newMessages);
-    setIsLoading(true);
-
+  async function send(text: string) {
+    const content = text.trim();
+    if (!content || loading) return;
+    const next: Message[] = [...messages, { role: "user", content }];
+    setMessages(next); setInput(""); setLoading(true);
     try {
-      console.log('Sending messages to WisdomBot:', newMessages);
-      const response = await fetch('/api/chat', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ messages: newMessages }),
-      });
-
-      if (!response.ok) {
-        const errorData = await response.json().catch(() => ({}));
-        console.error('API Response Error:', errorData);
-        throw new Error('Failed to fetch response');
-      }
-
-      const data = await response.json();
-      setMessages((prev) => [...prev, { role: 'assistant', content: data.reply }]);
-    } catch (error: any) {
-      console.error('Chat Error:', error);
-      setMessages((prev) => [...prev, { role: 'assistant', content: `Error: ${error.message || "Connection failed"}. Please check your terminal logs for details.` }]);
+      const res = await fetch("/api/chat", { method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify({ messages: next }) });
+      const data = await res.json();
+      setMessages([...next, { role: "assistant", content: data.reply ?? data.error ?? "Something went wrong." }]);
+    } catch {
+      setMessages([...next, { role: "assistant", content: "Network error — please try again." }]);
     } finally {
-      setIsLoading(false);
+      setLoading(false);
     }
-  };
+  }
 
   return (
-    <div style={{ position: 'fixed', bottom: '30px', right: '30px', zIndex: 9999, display: 'flex', flexDirection: 'column', alignItems: 'flex-end' }}>
-      
-      {/* Floating Greeting Bubble */}
-      {showGreeting && !isOpen && (
-        <div 
-          className="glass animate-fade"
-          style={{ 
-            marginBottom: '15px', 
-            padding: '12px 20px', 
-            borderRadius: '20px', 
-            borderBottomRightRadius: '4px',
-            background: 'rgba(99, 102, 241, 0.15)',
-            border: '1px solid rgba(99, 102, 241, 0.3)',
-            boxShadow: '0 10px 25px rgba(0,0,0,0.2)',
-            cursor: 'pointer',
-            display: 'flex',
-            alignItems: 'center',
-            gap: '10px'
-          }}
-          onClick={toggleChat}
-        >
-          <span style={{ fontSize: '1.2rem' }}>👋</span>
-          <span style={{ fontWeight: 600, fontSize: '0.95rem' }}>Hello!! Do you want some help?</span>
-          <button 
-            onClick={(e) => { e.stopPropagation(); setShowGreeting(false); }}
-            style={{ background: 'none', border: 'none', color: '#94a3b8', cursor: 'pointer', marginLeft: '5px', display: 'flex', alignItems: 'center' }}
-          >
-            <X size={14} />
-          </button>
-        </div>
-      )}
-
-      {/* Chat Window */}
-      {isOpen && (
-        <div 
-          className="glass animate-fade"
-          style={{ 
-            width: 'calc(100vw - 40px)',
-            maxWidth: '380px', 
-            height: '600px', 
-            maxHeight: '70vh',
-            marginBottom: '20px', 
-            borderRadius: '24px', 
-            display: 'flex', 
-            flexDirection: 'column',
-            overflow: 'hidden',
-            boxShadow: '0 20px 40px rgba(0,0,0,0.4)',
-            border: '1px solid var(--glass-border)'
-          }}
-        >
-          {/* Chat Header */}
-          <div style={{ background: 'linear-gradient(135deg, rgba(99, 102, 241, 0.2), rgba(6, 182, 212, 0.2))', padding: '15px 20px', display: 'flex', justifyContent: 'space-between', alignItems: 'center', borderBottom: '1px solid rgba(255,255,255,0.05)' }}>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-              <div style={{ background: 'var(--primary)', width: '32px', height: '32px', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                <Bot size={18} color="white" />
-              </div>
-              <div>
-                <h3 style={{ fontSize: '1rem', margin: 0 }}>WisdomBot</h3>
-                <span style={{ fontSize: '0.75rem', color: '#10b981', display: 'flex', alignItems: 'center', gap: '4px' }}>
-                  <span style={{ width: '6px', height: '6px', background: '#10b981', borderRadius: '50%', display: 'inline-block' }}></span> Online
-                </span>
-              </div>
-            </div>
-            <button onClick={toggleChat} style={{ background: 'none', border: 'none', color: 'white', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '5px' }}>
-              <X size={20} />
-            </button>
+    <div className="fixed bottom-5 end-5 z-50 print:hidden">
+      {open && (
+        <div className="card mb-3 flex h-[min(560px,75dvh)] w-[min(380px,calc(100vw-2.5rem))] animate-fade-up flex-col overflow-hidden">
+          <div className="flex items-center justify-between border-b border-white/[0.06] bg-brand-500/10 px-4 py-3">
+            <div className="flex items-center gap-2"><Bot size={18} className="text-brand-300" /><div><div className="text-sm font-semibold">Compliance Copilot</div><div className="text-[10px] text-ink-400">AI assistant · may make mistakes · not legal advice</div></div></div>
+            <button onClick={() => setOpen(false)} className="btn-ghost px-1.5 py-1" aria-label="Close"><X size={16} /></button>
           </div>
-
-          {/* Chat Messages */}
-          <div style={{ flex: 1, overflowY: 'auto', padding: '20px', display: 'flex', flexDirection: 'column', gap: '15px' }}>
-            {messages.map((msg, idx) => (
-              <div key={idx} style={{ display: 'flex', flexDirection: msg.role === 'user' ? 'row-reverse' : 'row', gap: '10px', alignItems: 'flex-end' }}>
-                {msg.role === 'assistant' && (
-                  <div style={{ width: '28px', height: '28px', borderRadius: '50%', background: 'rgba(255,255,255,0.1)', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
-                    <Bot size={14} color="var(--primary)" />
-                  </div>
-                )}
-                
-                <div style={{ 
-                  background: msg.role === 'user' ? 'var(--primary)' : 'rgba(255,255,255,0.05)', 
-                  padding: '12px 16px', 
-                  borderRadius: '16px',
-                  borderBottomRightRadius: msg.role === 'user' ? '4px' : '16px',
-                  borderBottomLeftRadius: msg.role === 'assistant' ? '4px' : '16px',
-                  maxWidth: '80%',
-                  fontSize: '0.9rem',
-                  lineHeight: '1.5',
-                  color: msg.role === 'user' ? 'white' : '#cbd5e1'
-                }}>
-                  {msg.content}
-                </div>
-              </div>
-            ))}
-            
-            {isLoading && (
-              <div style={{ display: 'flex', gap: '10px', alignItems: 'flex-end' }}>
-                 <div style={{ width: '28px', height: '28px', borderRadius: '50%', background: 'rgba(255,255,255,0.1)', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
-                    <Bot size={14} color="var(--primary)" />
-                  </div>
-                  <div style={{ background: 'rgba(255,255,255,0.05)', padding: '12px 16px', borderRadius: '16px', borderBottomLeftRadius: '4px', display: 'flex', gap: '5px', alignItems: 'center' }}>
-                    <span className="dot-typing" style={{ width: '6px', height: '6px', background: '#94a3b8', borderRadius: '50%', animation: 'bounce 1.4s infinite ease-in-out both' }}></span>
-                    <span className="dot-typing" style={{ width: '6px', height: '6px', background: '#94a3b8', borderRadius: '50%', animation: 'bounce 1.4s infinite ease-in-out both', animationDelay: '0.2s' }}></span>
-                    <span className="dot-typing" style={{ width: '6px', height: '6px', background: '#94a3b8', borderRadius: '50%', animation: 'bounce 1.4s infinite ease-in-out both', animationDelay: '0.4s' }}></span>
-                  </div>
-              </div>
+          <div className="flex-1 space-y-3 overflow-y-auto p-4 text-sm">
+            <div className="rounded-2xl rounded-ss-sm bg-white/[0.05] px-3 py-2" dir="auto">{GREETING[locale] ?? GREETING.en}</div>
+            {!messages.length && (
+              <div className="flex flex-wrap gap-1.5">{SUGGESTIONS.map((s) => <button key={s} onClick={() => send(s)} className="rounded-full border border-white/10 px-2.5 py-1 text-xs text-ink-300 hover:bg-white/[0.05]">{s}</button>)}</div>
             )}
-            <div ref={messagesEndRef} />
+            {messages.map((m, i) => (
+              <div key={i} dir="auto" className={`whitespace-pre-wrap rounded-2xl px-3 py-2 ${m.role === "user" ? "ms-8 rounded-se-sm bg-brand-500/25" : "me-4 rounded-ss-sm bg-white/[0.05]"}`}>{m.content}</div>
+            ))}
+            {loading && <div className="flex items-center gap-2 text-xs text-ink-400"><Loader2 size={13} className="animate-spin" /> Thinking…</div>}
+            <div ref={end} />
           </div>
-
-          {/* Chat Input */}
-          <div style={{ padding: '15px', borderTop: '1px solid rgba(255,255,255,0.05)', background: 'rgba(0,0,0,0.2)' }}>
-            <form onSubmit={handleSendMessage} style={{ display: 'flex', gap: '10px' }}>
-              <input 
-                type="text" 
-                value={input}
-                onChange={(e) => setInput(e.target.value)}
-                placeholder="Ask about Artificial Wisdom..."
-                style={{ flex: 1, padding: '12px 15px', borderRadius: '20px', border: '1px solid rgba(255,255,255,0.1)', background: 'rgba(255,255,255,0.05)', color: 'white', fontSize: '0.9rem', outline: 'none' }}
-                disabled={isLoading}
-              />
-              <button 
-                type="submit" 
-                disabled={!input.trim() || isLoading}
-                style={{ 
-                  background: input.trim() && !isLoading ? 'var(--primary)' : 'rgba(255,255,255,0.1)', 
-                  color: 'white', 
-                  border: 'none', 
-                  borderRadius: '50%', 
-                  width: '42px', 
-                  height: '42px', 
-                  display: 'flex', 
-                  alignItems: 'center', 
-                  justifyContent: 'center',
-                  cursor: input.trim() && !isLoading ? 'pointer' : 'not-allowed',
-                  transition: 'background 0.2s'
-                }}
-              >
-                <Send size={18} style={{ marginLeft: '2px' }} />
-              </button>
-            </form>
-          </div>
+          <form onSubmit={(e) => { e.preventDefault(); send(input); }} className="flex gap-2 border-t border-white/[0.06] p-3">
+            <input value={input} onChange={(e) => setInput(e.target.value)} className="input py-2" placeholder="Ask about compliance, scores, fixes…" dir="auto" />
+            <button className="btn-primary px-3" disabled={loading || !input.trim()} aria-label="Send"><Send size={15} /></button>
+          </form>
         </div>
       )}
-
-      {/* FAB Button */}
-      <button 
-        onClick={toggleChat}
-        style={{ 
-          width: '60px', 
-          height: '60px', 
-          borderRadius: '50%', 
-          background: 'linear-gradient(135deg, var(--primary), var(--secondary))', 
-          border: 'none', 
-          color: 'white', 
-          cursor: 'pointer', 
-          display: 'flex', 
-          alignItems: 'center', 
-          justifyContent: 'center',
-          boxShadow: '0 10px 25px rgba(99, 102, 241, 0.4)',
-          transition: 'transform 0.2s',
-          transform: isOpen ? 'scale(0.9)' : 'scale(1)'
-        }}
-      >
-        {isOpen ? <X size={28} /> : <MessageSquare size={28} />}
+      <button onClick={() => setOpen(!open)} className="ms-auto flex h-14 w-14 items-center justify-center rounded-full bg-gradient-to-br from-brand-500 to-cyan-500 text-white shadow-[0_10px_30px_-8px_rgb(99_102_241/0.8)] transition hover:scale-105" aria-label="Open Compliance Copilot">
+        {open ? <X size={22} /> : <MessageSquare size={22} />}
       </button>
-
-      {/* Animation Styles */}
-      <style dangerouslySetInnerHTML={{__html: `
-        @keyframes bounce {
-          0%, 80%, 100% { transform: scale(0); }
-          40% { transform: scale(1); }
-        }
-      `}} />
     </div>
   );
 }
