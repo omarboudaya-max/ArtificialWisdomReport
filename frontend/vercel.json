@@ -1,6 +1,15 @@
 {
+  "$schema": "https://openapi.vercel.sh/vercel.json",
   "framework": "nextjs",
-  "crons": [
-    { "path": "/api/cron/monitor", "schedule": "17 4 * * *" }
-  ]
+  "functions": {
+    "src/app/api/schedules/continuous-monitoring/route.ts": {
+      "experimentalTriggers": [{ "type": "schedule/v1beta" }]
+    }
+  },
+  "schedules": {
+    "continuous-monitoring": {
+      "schedule": "17 4 * * *",
+      "function": "api/schedules/continuous-monitoring"
+    }
+  }
 }

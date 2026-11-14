@@ -1,9 +1,0 @@
-{
-  "version": 2,
-  "builds": [
-    { "src": "frontend/package.json", "use": "@vercel/next" }
-  ],
-  "crons": [
-    { "path": "/api/cron/monitor", "schedule": "17 4 * * *" }
-  ]
-}

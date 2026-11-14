@@ -40,3 +40,19 @@ export async function monitorSystem(admin: SupabaseClient, s: Sys) {
   if (serious.length) await notifyWebhook(admin, s.org_id, `${s.name}: ${serious.map((e) => e.message).join(" | ")}`);
   return events;
 }
+
+/** Daily sweep: expire credentials platform-wide, then re-scan every monitored system within a time budget. */
+export async function runMonitoringSweep(admin: SupabaseClient, budgetMs = 270_000) {
+  await admin.from("credentials").update({ status: "expired" }).eq("status", "active").lt("expires_at", new Date().toISOString());
+  const { data: systems } = await admin.from("ai_systems").select("id, org_id, name, url").eq("monitoring_enabled", true).limit(200);
+  const queue = [...(systems ?? [])];
+  let monitored = 0, failed = 0;
+  const started = Date.now();
+  await Promise.all(Array.from({ length: 4 }, async () => {
+    while (queue.length && Date.now() - started < budgetMs) {
+      const s = queue.shift()!;
+      try { await monitorSystem(admin, s); monitored++; } catch (e) { failed++; console.error("monitor", s.id, e); }
+    }
+  }));
+  return { monitored, failed, remaining: queue.length };
+}
