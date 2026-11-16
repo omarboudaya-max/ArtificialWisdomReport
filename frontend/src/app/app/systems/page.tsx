@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { Boxes, Plus, Activity } from "lucide-react";
 import { requireOrg } from "@/lib/session";
+import { getT } from "@/lib/i18n/server";
 import { Empty, PageHeader, TierBadge } from "@/components/ui/Badges";
 import { scoreColor } from "@/lib/engine/scoring";
 import { TIER_LABEL, type RiskTier } from "@/lib/engine/eu-ai-act";
@@ -8,7 +9,7 @@ import { TIER_LABEL, type RiskTier } from "@/lib/engine/eu-ai-act";
 export const metadata = { title: "AI Systems" };
 
 export default async function Systems() {
-  const { supabase, org, canEdit } = await requireOrg();
+  const [{ supabase, org, canEdit }, { t }] = await Promise.all([requireOrg(), getT()]);
   const [{ data: systems }, { data: assessments }] = await Promise.all([
     supabase.from("ai_systems").select("*").eq("org_id", org.id).order("created_at", { ascending: false }),
     supabase.from("assessments").select("system_id, aw_gti, rating, credential_status, created_at").eq("org_id", org.id).order("created_at", { ascending: false }).limit(500),
@@ -17,10 +18,10 @@ export default async function Systems() {
   for (const a of assessments ?? []) if (!latest.has(a.system_id)) latest.set(a.system_id, a);
   return (
     <>
-      <PageHeader eyebrow="Module 01" title="AI system inventory" subtitle="Every AI system with its profile, risk tier and latest assurance status."
-        actions={canEdit ? <Link href="/app/systems/new" className="btn-primary"><Plus size={16} /> Register system</Link> : undefined} />
+      <PageHeader eyebrow={t("sys.eyebrow")} title={t("sys.title")} subtitle={t("sys.subtitle")}
+        actions={canEdit ? <Link href="/app/systems/new" className="btn-primary"><Plus size={16} /> {t("sys.register")}</Link> : undefined} />
       {!systems?.length ? (
-        <Empty icon={<Boxes size={36} />} title="Your inventory is empty">Register chatbots, agents, RAG assistants, ML models and AI-powered websites.</Empty>
+        <Empty icon={<Boxes size={30} />} title={t("sys.emptyTitle")}>{t("ov.emptySub")}</Empty>
       ) : (
         <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
           {systems.map((s) => {
@@ -34,11 +35,11 @@ export default async function Systems() {
                   </div>
                   <div className="h-display text-2xl font-bold tabular-nums" style={{ color: scoreColor(a?.aw_gti != null ? Number(a.aw_gti) : null) }}>{a?.aw_gti != null ? Math.round(Number(a.aw_gti)) : "—"}</div>
                 </div>
-                <p className="mt-3 line-clamp-2 flex-1 text-sm text-ink-300">{s.description || s.use_case || "No description"}</p>
+                <p className="mt-3 line-clamp-2 flex-1 text-sm text-ink-300">{s.description || s.use_case || t("sys.noDescription")}</p>
                 <div className="mt-4 flex flex-wrap items-center gap-2">
-                  {a ? <TierBadge tier={a.credential_status} /> : <span className="chip border-white/10 text-ink-400">Not assessed</span>}
-                  {s.risk_tier && <span className="chip border-white/10 bg-white/[0.03] text-ink-300">{TIER_LABEL[s.risk_tier as RiskTier]}</span>}
-                  {s.monitoring_enabled && <span className="chip border-cyan-500/30 bg-cyan-500/10 text-cyan-300"><Activity size={11} /> Monitored</span>}
+                  {a ? <TierBadge tier={a.credential_status} /> : <span className="chip border-fg/10 text-ink-400">{t("common.notAssessed")}</span>}
+                  {s.risk_tier && <span className="chip border-fg/10 bg-fg/[0.03] text-ink-300">{TIER_LABEL[s.risk_tier as RiskTier]}</span>}
+                  {s.monitoring_enabled && <span className="chip border-cyan-500/30 bg-cyan-500/10 text-cyan-300"><Activity size={11} /> {t("sys.monitored")}</span>}
                 </div>
               </Link>
             );

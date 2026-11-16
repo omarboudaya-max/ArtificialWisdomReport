@@ -28,8 +28,8 @@ export default function Methodology() {
           <h2 className="h-display text-2xl font-semibold">1. Seven weighted dimensions</h2>
           <div className="card overflow-hidden">
             <table className="w-full text-sm">
-              <thead className="border-b border-white/[0.06] text-left text-xs uppercase tracking-wider text-ink-400"><tr><th className="px-5 py-3">Dimension</th><th className="px-3 py-3">Weight</th><th className="px-3 py-3">Evidence sources</th></tr></thead>
-              <tbody className="divide-y divide-white/[0.04]">
+              <thead className="border-b border-fg/[0.06] text-start text-xs uppercase tracking-wider text-ink-400"><tr><th className="px-5 py-3">Dimension</th><th className="px-3 py-3">Weight</th><th className="px-3 py-3">Evidence sources</th></tr></thead>
+              <tbody className="divide-y divide-fg/[0.04]">
                 {DIMENSIONS.map((d) => (
                   <tr key={d.key}><td className="px-5 py-3 font-medium">{d.label}</td><td className="px-3 py-3 font-mono text-brand-300">{d.weight}%</td>
                     <td className="px-3 py-3 text-ink-300">{{ safety_security: "Web security scan, LLM red-team probes, agent logs, governance controls", reliability: "Latency & availability, factual accuracy, hallucination traps, consistency, F1 / calibration from your data, agent task completion", ethics_fairness: "Counterfactual fairness, toxicity, Arabic & dialect parity, disparate impact, equal opportunity, accessibility", governance: "Governance controls, agent oversight metrics, EU AI Act classification", privacy: "Privacy notice & consent analysis, PII leakage probes, data governance controls", transparency: "AI disclosure, AI policy, documentation & logging controls, agent traceability", sustainability: "Page weight, compression, green hosting, environmental controls" }[d.key]}</td></tr>
@@ -68,10 +68,10 @@ export default function Methodology() {
         <section className="mt-12 space-y-3">
           <h2 className="h-display text-2xl font-semibold">4. Test catalogue</h2>
           <h3 className="font-semibold">Web-surface scan (≈35 checks)</h3>
-          <div className="card divide-y divide-white/[0.04]">{URL_CHECKS.map(([d, t]) => <div key={d} className="grid gap-2 px-5 py-3 text-sm sm:grid-cols-[160px_1fr]"><b>{d}</b><span className="text-ink-300">{t}</span></div>)}</div>
+          <div className="card divide-y divide-fg/[0.04]">{URL_CHECKS.map(([d, t]) => <div key={d} className="grid gap-2 px-5 py-3 text-sm sm:grid-cols-[160px_1fr]"><b>{d}</b><span className="text-ink-300">{t}</span></div>)}</div>
           <h3 className="pt-4 font-semibold">LLM probe suite</h3>
           <p className="text-sm text-ink-400">Deterministically scored: canary secrets and injected tokens are randomised per run and detected by exact match; harmful compliance uses multilingual refusal detection; fairness uses paired counterfactual prompts at temperature 0.</p>
-          <div className="card divide-y divide-white/[0.04]">
+          <div className="card divide-y divide-fg/[0.04]">
             {PROBE_CATALOG.map((p) => <div key={p.key} className="grid gap-2 px-5 py-2.5 text-sm sm:grid-cols-[1fr_180px_1fr]"><span className="font-medium">{p.name}{p.gate && <span className="chip ms-2 border-red-500/30 text-red-300">gate</span>}</span><span className="text-ink-400">{dimensionLabel(p.dimension)}</span><span className="text-ink-300">{p.threshold}</span></div>)}
           </div>
           <h3 className="pt-4 font-semibold">Evaluations from your data</h3>

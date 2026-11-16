@@ -27,7 +27,7 @@ export default function Standards() {
                 <div><h2 className="font-semibold">{f.name}</h2><div className="mt-1 text-xs text-ink-400">{f.jurisdiction} · {f.body}</div></div>
                 <a href={f.url} target="_blank" rel="noreferrer" className="btn-ghost shrink-0 px-2" aria-label={`Official source for ${f.short}`}><ExternalLink size={15} /></a>
               </div>
-              <div className="mt-3 flex flex-wrap gap-2"><span className="chip border-brand-400/30 bg-brand-500/10 text-brand-200 normal-case tracking-normal">{f.status}</span><span className="chip border-white/10 text-ink-300 normal-case tracking-normal">{f.effective}</span></div>
+              <div className="mt-3 flex flex-wrap gap-2"><span className="chip border-brand-400/30 bg-brand-500/10 text-brand-200 normal-case tracking-normal">{f.status}</span><span className="chip border-fg/10 text-ink-300 normal-case tracking-normal">{f.effective}</span></div>
               {f.note && <p className="mt-3 text-sm text-amber-200/80">{f.note}</p>}
               {f.requirements.length > 0 && <p className="mt-3 text-xs text-ink-400">{f.requirements.length} requirements mapped: {f.requirements.map((r) => r.id).join(" · ")}</p>}
             </section>
@@ -35,7 +35,7 @@ export default function Standards() {
         </div>
         <h2 className="h-display mt-16 text-2xl font-semibold">Stakeholder engagement map</h2>
         <p className="mt-2 text-sm text-ink-400">Targets for standards alignment, technical engagement or institutional dialogue. Inclusion does not imply any existing partnership, endorsement or formal recognition.</p>
-        <div className="card mt-4 divide-y divide-white/[0.05]">{STAKEHOLDERS.map(([k, v]) => <div key={k} className="grid gap-2 px-5 py-4 text-sm sm:grid-cols-[180px_1fr]"><b>{k}</b><span className="text-ink-300">{v}</span></div>)}</div>
+        <div className="card mt-4 divide-y divide-fg/[0.05]">{STAKEHOLDERS.map(([k, v]) => <div key={k} className="grid gap-2 px-5 py-4 text-sm sm:grid-cols-[180px_1fr]"><b>{k}</b><span className="text-ink-300">{v}</span></div>)}</div>
         <div className="card mt-8 p-6 text-sm text-ink-300">
           <b className="text-ink-100">Certification pathway.</b> ISO/IEC 42001 specifies AI management systems; ISO/IEC 42006 specifies requirements for bodies that audit and certify them (supplementing ISO/IEC 17021-1); ISO/IEC 17065 applies where a product, process or service certification scheme is established. Artificial Wisdom separates its technology platform (automated assessment, monitoring, evidence) from independent assurance and certification decisions, and does not market automated results as accredited certification.
         </div>

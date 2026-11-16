@@ -1,4 +1,5 @@
 import { requireOrg } from "@/lib/session";
+import { getT } from "@/lib/i18n/server";
 import { PageHeader } from "@/components/ui/Badges";
 import { addMember, removeMember, updateOrgSettings } from "../actions";
 import { SubmitButton } from "@/components/app/SubmitButton";
@@ -7,7 +8,7 @@ export const metadata = { title: "Settings" };
 
 export default async function Settings({ searchParams }: { searchParams: Promise<{ error?: string; saved?: string; added?: string }> }) {
   const sp = await searchParams;
-  const { supabase, org, isAdmin, user } = await requireOrg();
+  const [{ supabase, org, isAdmin, user }, { t }] = await Promise.all([requireOrg(), getT()]);
   const [{ data: o }, { data: members }] = await Promise.all([
     supabase.from("organizations").select("*").eq("id", org.id).single(),
     supabase.from("memberships").select("user_id, role, created_at").eq("org_id", org.id),
@@ -15,7 +16,7 @@ export default async function Settings({ searchParams }: { searchParams: Promise
   const { data: profiles } = await supabase.from("profiles").select("id, full_name, email").in("id", (members ?? []).map((m) => m.user_id));
   return (
     <>
-      <PageHeader eyebrow={org.name} title="Organization settings" subtitle="Workspace profile, role-based access and alert integrations." />
+      <PageHeader eyebrow={org.name} title={t("pg.settings")} subtitle="Workspace profile, role-based access and alert integrations." />
       {sp.error && <div className="mb-4 rounded-xl border border-red-500/30 bg-red-500/10 px-4 py-3 text-sm text-red-200">{sp.error}</div>}
       {(sp.saved || sp.added) && <div className="mb-4 rounded-xl border border-emerald-500/30 bg-emerald-500/10 px-4 py-3 text-sm text-emerald-200">Saved.</div>}
       <div className="grid gap-6 lg:grid-cols-2">
@@ -32,20 +33,20 @@ export default async function Settings({ searchParams }: { searchParams: Promise
         </form>
         <div className="card p-6">
           <h2 className="mb-4 font-semibold">Members & roles</h2>
-          <ul className="mb-5 divide-y divide-white/[0.05]">
+          <ul className="mb-5 divide-y divide-fg/[0.05]">
             {(members ?? []).map((m) => {
               const p = profiles?.find((x) => x.id === m.user_id);
               return (
                 <li key={m.user_id} className="flex items-center justify-between gap-3 py-2.5 text-sm">
                   <div className="min-w-0"><div className="truncate font-medium">{p?.full_name ?? "—"}{m.user_id === user.id && " (you)"}</div><div className="truncate text-xs text-ink-400">{p?.email}</div></div>
-                  <span className="chip border-white/10 text-ink-300">{m.role}</span>
+                  <span className="chip border-fg/10 text-ink-300">{m.role}</span>
                   {isAdmin && m.role !== "owner" && m.user_id !== user.id && <form action={removeMember}><input type="hidden" name="user_id" value={m.user_id} /><button className="btn-ghost px-2 py-1 text-xs text-red-300">Remove</button></form>}
                 </li>
               );
             })}
           </ul>
           {isAdmin && (
-            <form action={addMember} className="space-y-3 rounded-xl border border-white/[0.06] p-4">
+            <form action={addMember} className="space-y-3 rounded-xl border border-fg/[0.06] p-4">
               <div className="text-sm font-semibold">Add member</div>
               <div className="flex flex-col gap-2 sm:flex-row">
                 <input name="email" type="email" required className="input" placeholder="colleague@company.com" />

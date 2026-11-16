@@ -46,22 +46,22 @@ export default function Chatbot() {
     <div className="fixed bottom-5 end-5 z-50 print:hidden">
       {open && (
         <div className="card mb-3 flex h-[min(560px,75dvh)] w-[min(380px,calc(100vw-2.5rem))] animate-fade-up flex-col overflow-hidden">
-          <div className="flex items-center justify-between border-b border-white/[0.06] bg-brand-500/10 px-4 py-3">
+          <div className="flex items-center justify-between border-b border-fg/[0.06] bg-brand-500/10 px-4 py-3">
             <div className="flex items-center gap-2"><Bot size={18} className="text-brand-300" /><div><div className="text-sm font-semibold">Compliance Copilot</div><div className="text-[10px] text-ink-400">AI assistant · may make mistakes · not legal advice</div></div></div>
             <button onClick={() => setOpen(false)} className="btn-ghost px-1.5 py-1" aria-label="Close"><X size={16} /></button>
           </div>
           <div className="flex-1 space-y-3 overflow-y-auto p-4 text-sm">
-            <div className="rounded-2xl rounded-ss-sm bg-white/[0.05] px-3 py-2" dir="auto">{GREETING[locale] ?? GREETING.en}</div>
+            <div className="rounded-2xl rounded-ss-sm bg-fg/[0.05] px-3 py-2" dir="auto">{GREETING[locale] ?? GREETING.en}</div>
             {!messages.length && (
-              <div className="flex flex-wrap gap-1.5">{SUGGESTIONS.map((s) => <button key={s} onClick={() => send(s)} className="rounded-full border border-white/10 px-2.5 py-1 text-xs text-ink-300 hover:bg-white/[0.05]">{s}</button>)}</div>
+              <div className="flex flex-wrap gap-1.5">{SUGGESTIONS.map((s) => <button key={s} onClick={() => send(s)} className="rounded-full border border-fg/10 px-2.5 py-1 text-xs text-ink-300 hover:bg-fg/[0.05]">{s}</button>)}</div>
             )}
             {messages.map((m, i) => (
-              <div key={i} dir="auto" className={`whitespace-pre-wrap rounded-2xl px-3 py-2 ${m.role === "user" ? "ms-8 rounded-se-sm bg-brand-500/25" : "me-4 rounded-ss-sm bg-white/[0.05]"}`}>{m.content}</div>
+              <div key={i} dir="auto" className={`whitespace-pre-wrap rounded-2xl px-3 py-2 ${m.role === "user" ? "ms-8 rounded-se-sm bg-brand-500/25" : "me-4 rounded-ss-sm bg-fg/[0.05]"}`}>{m.content}</div>
             ))}
             {loading && <div className="flex items-center gap-2 text-xs text-ink-400"><Loader2 size={13} className="animate-spin" /> Thinking…</div>}
             <div ref={end} />
           </div>
-          <form onSubmit={(e) => { e.preventDefault(); send(input); }} className="flex gap-2 border-t border-white/[0.06] p-3">
+          <form onSubmit={(e) => { e.preventDefault(); send(input); }} className="flex gap-2 border-t border-fg/[0.06] p-3">
             <input value={input} onChange={(e) => setInput(e.target.value)} className="input py-2" placeholder="Ask about compliance, scores, fixes…" dir="auto" />
             <button className="btn-primary px-3" disabled={loading || !input.trim()} aria-label="Send"><Send size={15} /></button>
           </form>

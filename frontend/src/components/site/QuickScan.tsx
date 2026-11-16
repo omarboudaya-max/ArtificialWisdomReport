@@ -76,7 +76,7 @@ export function QuickScan() {
 
       {(running || done || error) && (
         <div className="card mx-auto mt-8 max-w-5xl animate-fade-up overflow-hidden text-start">
-          <div className="flex items-center justify-between border-b border-white/[0.06] px-5 py-3 text-sm">
+          <div className="flex items-center justify-between border-b border-fg/[0.06] px-5 py-3 text-sm">
             <div className="flex items-center gap-2 font-semibold">
               {running ? <Loader2 size={15} className="animate-spin text-brand-300" /> : <ScanLine size={15} className="text-brand-300" />}
               Public-surface assessment {done?.meta.finalUrl && <span className="truncate font-normal text-ink-400">· {done.meta.finalUrl}</span>}
@@ -87,7 +87,7 @@ export function QuickScan() {
           {error && <div className="flex items-center gap-2 px-5 py-4 text-sm text-red-300"><ShieldAlert size={16} /> {error}</div>}
 
           <div className="grid gap-0 md:grid-cols-[300px_1fr]">
-            <div className="flex flex-col items-center gap-4 border-b border-white/[0.06] p-6 md:border-b-0 md:border-e">
+            <div className="flex flex-col items-center gap-4 border-b border-fg/[0.06] p-6 md:border-b-0 md:border-e">
               {done ? (
                 <>
                   <ScoreRing score={done.summary.awGti} size={150} sub="surface score" color={done.summary.gateFailed ? BAND_COLOR.critical : undefined} />
@@ -99,7 +99,7 @@ export function QuickScan() {
                     {done.summary.dimensions.filter((d) => d.score !== null).map((d) => (
                       <div key={d.key}>
                         <div className="mb-1 flex justify-between text-xs"><span className="text-ink-300">{d.label}</span><span className="font-semibold tabular-nums">{Math.round(d.score!)}</span></div>
-                        <div className="h-1.5 overflow-hidden rounded-full bg-white/[0.06]"><div className="h-full rounded-full" style={{ width: `${d.score}%`, background: scoreColor(d.score) }} /></div>
+                        <div className="h-1.5 overflow-hidden rounded-full bg-fg/[0.06]"><div className="h-full rounded-full" style={{ width: `${d.score}%`, background: scoreColor(d.score) }} /></div>
                       </div>
                     ))}
                   </div>
@@ -113,20 +113,20 @@ export function QuickScan() {
             </div>
             <div className="max-h-[440px] overflow-y-auto p-2">
               {done && done.findings.length > 0 && (
-                <div className="mb-2 rounded-xl border border-white/[0.06] bg-white/[0.02] p-3">
+                <div className="mb-2 rounded-xl border border-fg/[0.06] bg-fg/[0.02] p-3">
                   <div className="mb-2 text-xs font-semibold uppercase tracking-wider text-ink-400">Priority fixes</div>
                   <ul className="space-y-2">
                     {done.findings.slice(0, 4).map((f) => (
                       <li key={f.checkKey} className="flex items-start gap-2 text-sm">
                         <SeverityBadge severity={f.severity} />
                         <span className="flex-1">{f.title}<span className="block text-xs text-ink-400">{f.recommendation.actions[0]}</span></span>
-                        {f.projectedUplift ? <span className="text-xs font-semibold text-emerald-300">+{f.projectedUplift}</span> : null}
+                        {f.projectedUplift ? <span className="text-xs font-semibold text-emerald-300"><span dir="ltr">+{f.projectedUplift}</span></span> : null}
                       </li>
                     ))}
                   </ul>
                 </div>
               )}
-              <ul className="divide-y divide-white/[0.04]">
+              <ul className="divide-y divide-fg/[0.04]">
                 {checks.map((c) => (
                   <li key={c.key} className="flex animate-fade-up items-start justify-between gap-3 px-3 py-2.5">
                     <div className="min-w-0">
@@ -140,7 +140,7 @@ export function QuickScan() {
             </div>
           </div>
           {done && (
-            <div className="flex flex-col items-center justify-between gap-3 border-t border-white/[0.06] bg-brand-500/[0.06] px-5 py-4 sm:flex-row">
+            <div className="flex flex-col items-center justify-between gap-3 border-t border-fg/[0.06] bg-brand-500/[0.06] px-5 py-4 sm:flex-row">
               <p className="text-sm text-ink-200">This scan covers the public web surface only. Add LLM red-teaming, fairness, governance and a verifiable credential in the full assessment.</p>
               <Link href="/login?mode=signup" className="btn-primary shrink-0">Run full assessment <ArrowRight size={15} className="rtl:rotate-180" /></Link>
             </div>

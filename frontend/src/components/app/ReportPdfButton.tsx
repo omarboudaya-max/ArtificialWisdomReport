@@ -2,8 +2,10 @@
 import { useState } from "react";
 import { FileDown, Loader2 } from "lucide-react";
 import type { PdfData } from "@/lib/pdf/report-pdf";
+import { useT } from "@/lib/i18n/client";
 
 export function ReportPdfButton({ data }: { data: PdfData }) {
+  const { t } = useT();
   const [busy, setBusy] = useState(false);
   return (
     <button
@@ -19,7 +21,7 @@ export function ReportPdfButton({ data }: { data: PdfData }) {
         }
       }}
     >
-      {busy ? <Loader2 size={15} className="animate-spin" /> : <FileDown size={15} />} Download PDF report
+      {busy ? <Loader2 size={15} className="animate-spin" /> : <FileDown size={15} />} {t("act.downloadPdf")}
     </button>
   );
 }

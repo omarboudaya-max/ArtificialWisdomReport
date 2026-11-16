@@ -67,7 +67,7 @@ export function AuthForm({ initialMode, next, initialError }: { initialMode: "si
       <button onClick={magic} disabled={busy} className="btn-secondary mt-3 w-full"><Mail size={15} /> {t("auth.magic")}</button>
       <p className="mt-6 text-center text-sm text-ink-400">
         {mode === "signup" ? t("auth.haveAccount") : t("auth.noAccount")}{" "}
-        <button className="font-semibold text-brand-300 hover:text-white" onClick={() => { setMode(mode === "signup" ? "signin" : "signup"); setMsg(null); }}>
+        <button className="font-semibold text-brand-300 hover:text-fg" onClick={() => { setMode(mode === "signup" ? "signin" : "signup"); setMsg(null); }}>
           {mode === "signup" ? t("auth.signin") : t("auth.signup")}
         </button>
       </p>

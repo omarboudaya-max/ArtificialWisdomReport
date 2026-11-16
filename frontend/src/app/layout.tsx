@@ -1,14 +1,15 @@
 import type { Metadata, Viewport } from "next";
-import { Inter, Outfit, Geist_Mono, IBM_Plex_Sans_Arabic } from "next/font/google";
+import { Inter, Outfit, Geist_Mono, IBM_Plex_Sans_Arabic, Noto_Kufi_Arabic } from "next/font/google";
 import "./globals.css";
 import Chatbot from "@/components/Chatbot";
 import { I18nProvider } from "@/lib/i18n/client";
-import { getT } from "@/lib/i18n/server";
+import { getT, getTheme } from "@/lib/i18n/server";
 
 const inter = Inter({ variable: "--font-inter", subsets: ["latin"], display: "swap" });
 const outfit = Outfit({ variable: "--font-outfit", subsets: ["latin"], display: "swap" });
 const mono = Geist_Mono({ variable: "--font-geist-mono", subsets: ["latin"], display: "swap" });
 const arabic = IBM_Plex_Sans_Arabic({ variable: "--font-arabic", subsets: ["arabic"], weight: ["400", "500", "600", "700"], display: "swap" });
+const arabicDisplay = Noto_Kufi_Arabic({ variable: "--font-arabic-display", subsets: ["arabic"], weight: ["500", "600", "700", "800"], display: "swap" });
 
 const SITE = process.env.NEXT_PUBLIC_SITE_URL || "https://www.auditingartificialwisdom.com";
 
@@ -25,14 +26,30 @@ export const metadata: Metadata = {
     type: "website",
   },
   twitter: { card: "summary_large_image", title: "Artificial Wisdom", description: "30 seconds to AI trust intelligence.", images: ["/logo.png"] },
+  appleWebApp: { title: "Artificial Wisdom", statusBarStyle: "black-translucent" },
+  formatDetection: { telephone: false },
 };
 
-export const viewport: Viewport = { themeColor: "#05070f", width: "device-width", initialScale: 1 };
+export const viewport: Viewport = {
+  width: "device-width",
+  initialScale: 1,
+  viewportFit: "cover",
+  themeColor: [
+    { media: "(prefers-color-scheme: light)", color: "#f5f7fb" },
+    { media: "(prefers-color-scheme: dark)", color: "#05070f" },
+  ],
+};
 
 export default async function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
-  const { locale, dir } = await getT();
+  const [{ locale, dir }, theme] = await Promise.all([getT(), getTheme()]);
   return (
-    <html lang={locale} dir={dir} className={`${inter.variable} ${outfit.variable} ${mono.variable} ${arabic.variable}`}>
+    <html
+      lang={locale}
+      dir={dir}
+      data-theme={theme === "system" ? undefined : theme}
+      className={`${inter.variable} ${outfit.variable} ${mono.variable} ${arabic.variable} ${arabicDisplay.variable}`}
+      suppressHydrationWarning
+    >
       <body>
         <I18nProvider locale={locale}>
           {children}

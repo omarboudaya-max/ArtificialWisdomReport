@@ -2,6 +2,7 @@ import Link from "next/link";
 import { headers } from "next/headers";
 import { ExternalLink } from "lucide-react";
 import { requireOrg } from "@/lib/session";
+import { getT } from "@/lib/i18n/server";
 import { Empty, PageHeader, TierBadge } from "@/components/ui/Badges";
 import { scoreColor } from "@/lib/engine/scoring";
 import { revokeCredential } from "../actions";
@@ -10,13 +11,13 @@ import { CopyField } from "@/components/app/CopyField";
 export const metadata = { title: "Digital Trust Passports" };
 
 export default async function Credentials() {
-  const { supabase, org, isAdmin } = await requireOrg();
+  const [{ supabase, org, isAdmin }, { t }] = await Promise.all([requireOrg(), getT()]);
   const { data } = await supabase.from("credentials").select("*, ai_systems(name)").eq("org_id", org.id).order("issued_at", { ascending: false }).limit(200);
   const h = await headers();
   const origin = `${h.get("x-forwarded-proto") ?? "https"}://${h.get("host")}`;
   return (
     <>
-      <PageHeader eyebrow="Verifiable assessment records" title="Digital Trust Passports" subtitle="Every assessment issues a timestamped, hash-bound record. Provisional and reviewed credentials can be embedded as a live badge and verified publicly." />
+      <PageHeader eyebrow="Verifiable assessment records" title={t("pg.credentials")} subtitle="Every assessment issues a timestamped, hash-bound record. Provisional and reviewed credentials can be embedded as a live badge and verified publicly." />
       {!data?.length ? <Empty title="No credentials yet">Credentials are issued automatically when an assessment completes.</Empty> : (
         <div className="space-y-3">
           {data.map((c) => {
@@ -30,7 +31,7 @@ export default async function Credentials() {
                     <div className="font-mono text-xs text-ink-400">{c.code} · issued {new Date(c.issued_at).toLocaleDateString()} · expires {new Date(c.expires_at).toLocaleDateString()}</div>
                   </div>
                   <TierBadge tier={c.tier} />
-                  <span className={`chip ${c.status === "active" ? "border-emerald-500/30 text-emerald-300" : "border-white/10 text-ink-400"}`}>{c.status}</span>
+                  <span className={`chip ${c.status === "active" ? "border-emerald-500/30 text-emerald-300" : "border-fg/10 text-ink-400"}`}>{c.status}</span>
                   <Link href={`/verify/${c.code}`} target="_blank" className="btn-ghost px-2"><ExternalLink size={15} /></Link>
                 </div>
                 {c.status === "active" && (

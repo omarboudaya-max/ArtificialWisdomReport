@@ -31,7 +31,7 @@ export default async function Classification({ params, searchParams }: { params:
             <h2 className="mb-3 font-semibold">{g.title}</h2>
             <div className="space-y-2">
               {RISK_QUESTIONS.filter((q) => q.group === g.key).map((q) => (
-                <label key={q.key} className="flex cursor-pointer items-start gap-3 rounded-lg p-2 text-sm hover:bg-white/[0.03]">
+                <label key={q.key} className="flex cursor-pointer items-start gap-3 rounded-lg p-2 text-sm hover:bg-fg/[0.03]">
                   <input type="checkbox" name={`q_${q.key}`} defaultChecked={!!answers[q.key]} disabled={!canEdit} className="mt-0.5 h-4 w-4 accent-brand-500" />
                   <span className="flex-1 text-ink-200">{q.text}</span>
                   <span className="shrink-0 font-mono text-[11px] text-ink-500">{q.ref}</span>
@@ -47,7 +47,7 @@ export default async function Classification({ params, searchParams }: { params:
         {result ? (
           <div className={`card bg-gradient-to-b ${TIER_TONE[result.tier]} to-transparent p-6`}>
             <div className="text-xs font-semibold uppercase tracking-wider opacity-80">Indicative classification</div>
-            <div className="h-display mt-1 text-2xl font-bold text-white">{TIER_LABEL[result.tier]}</div>
+            <div className="h-display mt-1 text-2xl font-bold text-fg">{TIER_LABEL[result.tier]}</div>
             <div className="mt-4 text-xs font-semibold uppercase tracking-wider text-ink-400">Reasons</div>
             <ul className="mt-1 list-disc space-y-1 ps-5 text-sm text-ink-200">{result.reasons.map((r) => <li key={r}>{r}</li>)}</ul>
             <div className="mt-4 text-xs font-semibold uppercase tracking-wider text-ink-400">Key obligations</div>

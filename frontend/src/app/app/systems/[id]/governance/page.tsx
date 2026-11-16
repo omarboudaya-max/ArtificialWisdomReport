@@ -38,8 +38,8 @@ export default async function Governance({ params, searchParams }: { params: Pro
           if (!list.length) return null;
           return (
             <section key={d} className="card overflow-hidden">
-              <h2 className="border-b border-white/[0.06] px-5 py-3 font-semibold">{d}</h2>
-              <div className="divide-y divide-white/[0.04]">
+              <h2 className="border-b border-fg/[0.06] px-5 py-3 font-semibold">{d}</h2>
+              <div className="divide-y divide-fg/[0.04]">
                 {list.map((c) => {
                   const r = by.get(c.key);
                   return (
@@ -53,7 +53,7 @@ export default async function Governance({ params, searchParams }: { params: Pro
                       <div className="space-y-2">
                         <div className="flex flex-wrap gap-1.5">
                           {(["yes", "partial", "no", "na"] as const).map((a) => (
-                            <label key={a} className="cursor-pointer rounded-lg border border-white/10 px-3 py-1.5 text-xs font-semibold uppercase text-ink-300 has-[:checked]:border-brand-400 has-[:checked]:bg-brand-500/20 has-[:checked]:text-white">
+                            <label key={a} className="cursor-pointer rounded-lg border border-fg/10 px-3 py-1.5 text-xs font-semibold uppercase text-ink-300 has-[:checked]:border-brand-400 has-[:checked]:bg-brand-500/20 has-[:checked]:text-fg">
                               <input type="radio" name={`a_${c.key}`} value={a} defaultChecked={r?.answer === a} disabled={!canEdit} className="sr-only" />{a === "na" ? "N/A" : a}
                             </label>
                           ))}

@@ -40,7 +40,7 @@ export function EvaluationUpload({ systemId, kind }: { systemId: string; kind: "
           </div>
         </details>
       ) : (
-        <fieldset className="rounded-xl border border-white/[0.06] p-3 text-sm">
+        <fieldset className="rounded-xl border border-fg/[0.06] p-3 text-sm">
           <label className="flex items-center gap-2"><input type="checkbox" name="kill_recorded" className="accent-brand-500" /> Record a kill-switch test with this log</label>
           <div className="mt-2 flex flex-wrap items-center gap-3 ps-6 text-xs text-ink-300">
             <label className="flex items-center gap-2"><input type="checkbox" name="kill_tested" className="accent-brand-500" /> Test executed successfully</label>

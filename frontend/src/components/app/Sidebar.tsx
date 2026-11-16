@@ -7,23 +7,31 @@ import {
 } from "lucide-react";
 import { Logo } from "@/components/ui/Logo";
 import { useT } from "@/lib/i18n/client";
+import { LocaleSwitcher } from "@/components/site/LocaleSwitcher";
+import { ThemeToggle } from "@/components/site/ThemeToggle";
 import type { TKey } from "@/lib/i18n/dictionaries";
 
-const NAV: { href: string; key: TKey; icon: React.ComponentType<{ size?: number }>; exact?: boolean }[] = [
-  { href: "/app", key: "app.overview", icon: LayoutDashboard, exact: true },
-  { href: "/app/systems", key: "app.systems", icon: Boxes },
-  { href: "/app/assess", key: "app.newAssessment", icon: PlayCircle },
-  { href: "/app/findings", key: "app.findings", icon: ListChecks },
-  { href: "/app/compliance", key: "app.compliance", icon: Gavel },
-  { href: "/app/evidence", key: "app.evidence", icon: FileLock2 },
-  { href: "/app/monitoring", key: "app.monitoring", icon: Activity },
-  { href: "/app/credentials", key: "app.credentials", icon: BadgeCheck },
-  { href: "/app/reviews", key: "app.reviews", icon: UserCheck },
-  { href: "/app/audit-log", key: "app.auditLog", icon: ScrollText },
-  { href: "/app/settings", key: "app.settings", icon: Settings },
+type Item = { href: string; key: TKey; icon: React.ComponentType<{ size?: number }>; exact?: boolean };
+const GROUPS: { key: TKey; items: Item[] }[] = [
+  { key: "nav.group.assess", items: [
+    { href: "/app", key: "app.overview", icon: LayoutDashboard, exact: true },
+    { href: "/app/systems", key: "app.systems", icon: Boxes },
+    { href: "/app/assess", key: "app.newAssessment", icon: PlayCircle },
+  ] },
+  { key: "nav.group.govern", items: [
+    { href: "/app/findings", key: "app.findings", icon: ListChecks },
+    { href: "/app/compliance", key: "app.compliance", icon: Gavel },
+    { href: "/app/evidence", key: "app.evidence", icon: FileLock2 },
+  ] },
+  { key: "nav.group.assure", items: [
+    { href: "/app/monitoring", key: "app.monitoring", icon: Activity },
+    { href: "/app/credentials", key: "app.credentials", icon: BadgeCheck },
+    { href: "/app/reviews", key: "app.reviews", icon: UserCheck },
+    { href: "/app/audit-log", key: "app.auditLog", icon: ScrollText },
+  ] },
 ];
 
-export function Sidebar({ orgs, orgId, role, email, alerts }: { orgs: { id: string; name: string; role: string }[]; orgId: string; role: string; email: string; alerts: number }) {
+export function Sidebar({ orgs, orgId, role, email, alerts, theme }: { orgs: { id: string; name: string; role: string }[]; orgId: string; role: string; email: string; alerts: number; theme: "light" | "dark" | "system" }) {
   const path = usePathname();
   const { t } = useT();
   const [open, setOpen] = useState(false);
@@ -41,43 +49,54 @@ export function Sidebar({ orgs, orgId, role, email, alerts }: { orgs: { id: stri
           className="input py-2 text-[13px] font-semibold"
           aria-label="Organization"
         >
-          {orgs.map((o) => <option key={o.id} value={o.id}>{o.name} · {o.role}</option>)}
+          {orgs.map((o) => <option key={o.id} value={o.id}>{o.name} · {t(`role.${o.role}` as TKey)}</option>)}
         </select>
       </form>
-      <nav className="flex-1 space-y-0.5 overflow-y-auto px-3">
-        {NAV.map((n) => {
-          const active = n.exact ? path === n.href : path.startsWith(n.href);
-          return (
-            <Link key={n.href} href={n.href} onClick={() => setOpen(false)}
-              className={`flex items-center gap-3 rounded-xl px-3 py-2 text-sm font-medium transition ${active ? "bg-brand-500/15 text-white shadow-[inset_0_0_0_1px_rgb(129_140_248/0.25)]" : "text-ink-300 hover:bg-white/[0.04] hover:text-ink-100"}`}>
-              <n.icon size={17} />
-              <span className="flex-1">{t(n.key)}</span>
-              {n.href === "/app/monitoring" && alerts > 0 && <span className="rounded-full bg-red-500/20 px-1.5 text-[10px] font-bold text-red-300">{alerts}</span>}
-            </Link>
-          );
-        })}
-        <div className="my-3 border-t border-white/[0.05]" />
-        <Link href="/methodology" className="flex items-center gap-3 rounded-xl px-3 py-2 text-sm text-ink-400 hover:text-ink-100"><BookOpen size={17} /> {t("app.methodology")}</Link>
-        <Link href="/standards" className="flex items-center gap-3 rounded-xl px-3 py-2 text-sm text-ink-400 hover:text-ink-100"><ClipboardCheck size={17} /> Standards library</Link>
+      <nav className="scroll-subtle flex-1 space-y-5 overflow-y-auto px-3 pb-4">
+        {GROUPS.map((g) => (
+          <div key={g.key}>
+            <div className="mb-1 px-3 text-[11px] font-semibold uppercase tracking-[0.14em] text-ink-500">{t(g.key)}</div>
+            <div className="space-y-0.5">
+              {g.items.map((n) => {
+                const active = n.exact ? path === n.href : path.startsWith(n.href);
+                return (
+                  <Link key={n.href} href={n.href} onClick={() => setOpen(false)} aria-current={active ? "page" : undefined}
+                    className={`group relative flex items-center gap-3 rounded-xl px-3 py-2 text-sm font-medium transition ${active ? "bg-brand-500/12 text-ink-100" : "text-ink-300 hover:bg-fg/[0.04] hover:text-ink-100"}`}>
+                    {active && <span className="absolute inset-y-1.5 start-0 w-[3px] rounded-full bg-gradient-to-b from-brand-400 to-cyan-glow" />}
+                    <span className={active ? "text-brand-300" : "text-ink-400 group-hover:text-ink-200"}><n.icon size={17} /></span>
+                    <span className="flex-1">{t(n.key)}</span>
+                    {n.href === "/app/monitoring" && alerts > 0 && <span className="rounded-full bg-red-500/20 px-1.5 text-[10px] font-bold text-red-300">{alerts}</span>}
+                  </Link>
+                );
+              })}
+            </div>
+          </div>
+        ))}
+        <div className="space-y-0.5 border-t border-fg/[0.06] pt-4">
+          <Link href="/app/settings" onClick={() => setOpen(false)} className={`flex items-center gap-3 rounded-xl px-3 py-2 text-sm font-medium transition ${path.startsWith("/app/settings") ? "bg-brand-500/12 text-ink-100" : "text-ink-300 hover:bg-fg/[0.04] hover:text-ink-100"}`}><Settings size={17} /> {t("app.settings")}</Link>
+          <Link href="/methodology" className="flex items-center gap-3 rounded-xl px-3 py-2 text-sm text-ink-400 hover:text-ink-100"><BookOpen size={17} /> {t("app.methodology")}</Link>
+          <Link href="/standards" className="flex items-center gap-3 rounded-xl px-3 py-2 text-sm text-ink-400 hover:text-ink-100"><ClipboardCheck size={17} /> {t("nav.standardsLib")}</Link>
+        </div>
+        <div className="flex flex-wrap gap-2 px-1 lg:hidden"><LocaleSwitcher /><ThemeToggle initial={theme} compact /></div>
       </nav>
-      <div className="border-t border-white/[0.06] p-4">
+      <div className="border-t border-fg/[0.06] p-4">
         <div className="truncate text-xs text-ink-300">{email}</div>
-        <div className="mb-3 text-[11px] uppercase tracking-wider text-ink-500">{role}</div>
+        <div className="mb-3 text-[11px] uppercase tracking-wider text-ink-500">{t(`role.${role}` as TKey)}</div>
         <form action="/auth/signout" method="post"><button className="btn-secondary w-full py-2 text-xs">{t("app.signout")}</button></form>
       </div>
     </div>
   );
   return (
     <>
-      <div className="sticky top-0 z-30 flex h-14 items-center justify-between border-b border-white/[0.06] bg-ink-950/80 px-4 backdrop-blur-xl lg:hidden">
+      <div className="glass-header sticky top-0 z-30 flex h-14 items-center justify-between border-b border-fg/[0.06] px-4 lg:hidden">
         <Logo href="/app" />
         <button className="btn-ghost px-2" onClick={() => setOpen(true)} aria-label="Open menu"><Menu size={20} /></button>
       </div>
-      <aside className="fixed inset-y-0 start-0 z-40 hidden w-64 border-e border-white/[0.06] bg-ink-950/80 backdrop-blur-xl lg:block">{content}</aside>
+      <aside className="fixed inset-y-0 start-0 z-40 hidden w-64 border-e border-fg/[0.06] bg-ink-900/60 lg:block">{content}</aside>
       {open && (
         <div className="fixed inset-0 z-50 lg:hidden">
-          <div className="absolute inset-0 bg-black/60" onClick={() => setOpen(false)} />
-          <aside className="absolute inset-y-0 start-0 w-72 border-e border-white/10 bg-ink-950">{content}</aside>
+          <div className="absolute inset-0 bg-black/50 backdrop-blur-sm" onClick={() => setOpen(false)} />
+          <aside className="absolute inset-y-0 start-0 w-72 border-e border-fg/10 bg-ink-950">{content}</aside>
         </div>
       )}
     </>

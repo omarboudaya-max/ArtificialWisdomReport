@@ -1,3 +1,5 @@
+import { arExtra, arRefined, enExtra, frExtra } from "./extra";
+
 export type Locale = "en" | "fr" | "ar";
 export const LOCALES: { code: Locale; label: string; dir: "ltr" | "rtl" }[] = [
   { code: "en", label: "English", dir: "ltr" },
@@ -158,5 +160,10 @@ const ar: Dict = {
   "app.reviews": "مراجعات المدققين", "app.auditLog": "سجل التدقيق", "app.settings": "الإعدادات", "app.signout": "تسجيل الخروج", "app.methodology": "المنهجية",
 };
 
-export const DICTIONARIES: Record<Locale, Dict> = { en, fr, ar };
-export type TKey = keyof Dict;
+type FullDict = Dict & typeof enExtra;
+export const DICTIONARIES: Record<Locale, FullDict> = {
+  en: { ...en, ...enExtra },
+  fr: { ...fr, ...frExtra },
+  ar: { ...ar, ...arExtra, ...arRefined },
+};
+export type TKey = keyof FullDict;

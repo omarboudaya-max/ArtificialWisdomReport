@@ -29,7 +29,7 @@ export default async function Evaluations({ params }: { params: Promise<{ id: st
             <div className="mb-4 flex flex-wrap items-center justify-between gap-2">
               <div><div className="font-semibold">{e.label || (e.kind === "classification" ? "Classification evaluation" : "Agent log evaluation")}</div>
                 <div className="text-xs text-ink-400">{new Date(e.created_at).toLocaleString()} · input SHA-256 <span className="font-mono">{e.input_sha256.slice(0, 16)}…</span></div></div>
-              <span className="chip border-white/10 text-ink-300">{e.kind === "classification" ? "fairness & performance" : "agentic"}</span>
+              <span className="chip border-fg/10 text-ink-300">{e.kind === "classification" ? "fairness & performance" : "agentic"}</span>
             </div>
             {e.kind === "classification" ? <ClsView r={e.results as ClassificationResults} /> : <AgentView r={e.results as AgentResults} />}
           </div>
@@ -41,7 +41,7 @@ export default async function Evaluations({ params }: { params: Promise<{ id: st
 }
 
 function Metric({ k, v }: { k: string; v: string | number | undefined | null }) {
-  return <div className="rounded-xl border border-white/[0.06] bg-white/[0.02] p-3"><div className="text-[11px] uppercase tracking-wider text-ink-400">{k}</div><div className="mt-0.5 font-mono text-lg font-semibold">{v ?? "—"}</div></div>;
+  return <div className="rounded-xl border border-fg/[0.06] bg-fg/[0.02] p-3"><div className="text-[11px] uppercase tracking-wider text-ink-400">{k}</div><div className="mt-0.5 font-mono text-lg font-semibold">{v ?? "—"}</div></div>;
 }
 
 function ClsView({ r }: { r: ClassificationResults }) {
@@ -59,8 +59,8 @@ function ClsView({ r }: { r: ClassificationResults }) {
           </div>
           <div className="overflow-x-auto">
             <table className="w-full text-sm">
-              <thead className="text-left text-xs uppercase tracking-wider text-ink-400"><tr><th className="py-2">{r.groupColumn}</th><th>n</th><th>Selection rate</th><th>TPR</th><th>FPR</th><th>Accuracy</th></tr></thead>
-              <tbody className="divide-y divide-white/[0.04] font-mono">
+              <thead className="text-start text-xs uppercase tracking-wider text-ink-400"><tr><th className="py-2">{r.groupColumn}</th><th>n</th><th>Selection rate</th><th>TPR</th><th>FPR</th><th>Accuracy</th></tr></thead>
+              <tbody className="divide-y divide-fg/[0.04] font-mono">
                 {r.groups?.map((g) => <tr key={g.group}><td className="py-2 font-sans">{g.group}</td><td>{g.n}</td><td>{g.selectionRate}</td><td>{g.tpr}</td><td>{g.fpr}</td><td>{g.accuracy}</td></tr>)}
               </tbody>
             </table>

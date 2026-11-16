@@ -5,6 +5,7 @@ import {
 import { SiteHeader } from "@/components/site/SiteHeader";
 import { SiteFooter } from "@/components/site/SiteFooter";
 import { QuickScan } from "@/components/site/QuickScan";
+import { ProductPreview } from "@/components/site/ProductPreview";
 import { getT } from "@/lib/i18n/server";
 import { DIMENSIONS } from "@/lib/engine/types";
 import { FRAMEWORKS } from "@/lib/engine/compliance";
@@ -35,18 +36,21 @@ export default async function Home() {
         {/* HERO */}
         <section className="relative overflow-hidden">
           <div className="grid-bg pointer-events-none absolute inset-0" />
-          <div className="relative mx-auto max-w-7xl px-4 pb-20 pt-16 text-center sm:px-6 sm:pt-24">
-            <div className="mx-auto mb-6 inline-flex items-center gap-2 rounded-full border border-brand-400/25 bg-brand-500/10 px-3.5 py-1.5 text-xs font-semibold text-brand-200">
-              <span className="h-1.5 w-1.5 rounded-full bg-cyan-glow shadow-[0_0_10px_#22d3ee]" /> {t("hero.badge")}
+          <div aria-hidden className="pointer-events-none absolute -top-40 start-1/2 h-[520px] w-[820px] -translate-x-1/2 rounded-full bg-brand-500/20 blur-[120px] rtl:translate-x-1/2" />
+          <div aria-hidden className="pointer-events-none absolute end-[-10%] top-40 h-72 w-72 animate-float rounded-full bg-cyan-500/15 blur-3xl" />
+          <div className="relative mx-auto max-w-7xl px-4 pb-16 pt-16 text-center sm:px-6 sm:pt-24">
+            <div className="mx-auto mb-7 inline-flex items-center gap-2 rounded-full border border-brand-400/25 bg-brand-500/10 px-3.5 py-1.5 text-xs font-semibold text-brand-200">
+              <span className="relative flex h-2 w-2"><span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-cyan-glow opacity-60" /><span className="relative inline-flex h-2 w-2 rounded-full bg-cyan-glow" /></span>
+              {t("hero.badge")}
             </div>
-            <h1 className="h-display mx-auto max-w-4xl text-4xl font-bold leading-[1.05] sm:text-6xl lg:text-7xl">
-              {t("hero.title1")} <span className="text-gradient">{t("hero.title2")}</span>
+            <h1 className="h-display mx-auto max-w-4xl text-[2.6rem] font-bold leading-[1.06] text-ink-100 sm:text-6xl lg:text-7xl">
+              <span dir="auto">{t("hero.title1")}</span> <span className="text-gradient">{t("hero.title2")}</span>
             </h1>
             <p className="mx-auto mt-6 max-w-3xl text-base leading-relaxed text-ink-300 sm:text-lg">{t("hero.subtitle")}</p>
             <div className="mt-10">
               <QuickScan />
             </div>
-            <div className="mx-auto mt-16 grid max-w-4xl grid-cols-2 gap-4 sm:grid-cols-4">
+            <div className="mx-auto mt-16 grid max-w-4xl grid-cols-2 gap-3 sm:grid-cols-4">
               {[
                 ["70+", t("stats.checks")],
                 [String(FRAMEWORKS.filter((f) => f.requirements.length).length), t("stats.frameworks")],
@@ -60,7 +64,20 @@ export default async function Home() {
               ))}
             </div>
           </div>
+          {/* Frameworks strip */}
+          <div className="relative border-y border-fg/[0.06] bg-fg/[0.015] py-5">
+            <p className="mb-3 text-center text-xs font-semibold uppercase tracking-[0.16em] text-ink-400">{t("frameworks.strip")}</p>
+            <div dir="ltr" className="overflow-hidden [-webkit-mask-image:linear-gradient(90deg,transparent,black_12%,black_88%,transparent)] [mask-image:linear-gradient(90deg,transparent,black_12%,black_88%,transparent)]">
+              <div className="flex w-max animate-marquee gap-3 hover:[animation-play-state:paused]">
+                {[...FRAMEWORKS, ...FRAMEWORKS].map((f, i) => (
+                  <span key={`${f.key}-${i}`} className="whitespace-nowrap rounded-full border border-fg/10 bg-ink-900/70 px-4 py-1.5 text-sm font-medium text-ink-200">{f.short}</span>
+                ))}
+              </div>
+            </div>
+          </div>
         </section>
+
+        <div className="pt-20"><ProductPreview /></div>
 
         {/* MODULES */}
         <section id="platform" className="mx-auto max-w-7xl scroll-mt-20 px-4 py-20 sm:px-6">
@@ -84,14 +101,14 @@ export default async function Home() {
               <div className="relative">
                 <div className="text-xs font-semibold uppercase tracking-[0.2em] text-cyan-glow">AW-GTI</div>
                 <div className="h-display mt-2 text-xl font-semibold">Evidence-based, explainable, versioned and independently reviewable.</div>
-                <Link href="/methodology" className="mt-5 inline-flex items-center gap-1.5 text-sm font-semibold text-brand-300 hover:text-white">Read the methodology <ArrowRight size={14} className="rtl:rotate-180" /></Link>
+                <Link href="/methodology" className="mt-5 inline-flex items-center gap-1.5 text-sm font-semibold text-brand-300 hover:text-fg">Read the methodology <ArrowRight size={14} className="rtl:rotate-180" /></Link>
               </div>
             </div>
           </div>
         </section>
 
         {/* HOW */}
-        <section className="border-y border-white/[0.05] bg-ink-900/40">
+        <section className="border-y border-fg/[0.05] bg-ink-900/40">
           <div className="mx-auto max-w-7xl px-4 py-20 sm:px-6">
             <h2 className="h-display mb-12 text-center text-3xl font-bold sm:text-4xl">{t("how.title")}</h2>
             <div className="grid gap-6 md:grid-cols-4">
@@ -126,7 +143,7 @@ export default async function Home() {
               {DIMENSIONS.map((d) => (
                 <div key={d.key}>
                   <div className="mb-1.5 flex justify-between text-sm"><span className="font-medium">{d.label}</span><span className="font-mono text-brand-300">{d.weight}%</span></div>
-                  <div className="h-2.5 overflow-hidden rounded-full bg-white/[0.05]">
+                  <div className="h-2.5 overflow-hidden rounded-full bg-fg/[0.05]">
                     <div className="h-full rounded-full bg-gradient-to-r from-brand-500 to-cyan-glow" style={{ width: `${d.weight * 4}%` }} />
                   </div>
                 </div>
@@ -149,7 +166,7 @@ export default async function Home() {
               </div>
               <div className="grid grid-cols-2 gap-2 sm:grid-cols-3">
                 {agentMetrics.map((m) => (
-                  <div key={m} className="rounded-xl border border-white/[0.06] bg-white/[0.02] px-3 py-3 text-sm font-medium text-ink-200">{m}</div>
+                  <div key={m} className="rounded-xl border border-fg/[0.06] bg-fg/[0.02] px-3 py-3 text-sm font-medium text-ink-200">{m}</div>
                 ))}
               </div>
             </div>
@@ -165,7 +182,7 @@ export default async function Home() {
               <p className="mt-2 text-sm text-ink-300">Every LLM assessment checks accuracy and language parity across English, French, Modern Standard Arabic and Tunisian Darija — because most global evaluations ignore regional languages, dialects and code-switching.</p>
               <div className="mt-4 flex flex-wrap gap-2 text-sm" dir="auto">
                 {["What is the capital of Japan?", "Quelle est la capitale du Japon ?", "ما هي عاصمة اليابان؟", "شنية عاصمة اليابان؟"].map((q) => (
-                  <span key={q} className="rounded-lg border border-white/10 bg-white/[0.03] px-3 py-1.5">{q}</span>
+                  <span key={q} className="rounded-lg border border-fg/10 bg-fg/[0.03] px-3 py-1.5">{q}</span>
                 ))}
               </div>
             </div>
@@ -175,7 +192,7 @@ export default async function Home() {
               <p className="mt-2 text-sm text-ink-300">Binding law, voluntary standards and guidance kept distinct, applicability by jurisdiction and role.</p>
               <div className="mt-4 flex flex-wrap gap-1.5">
                 {FRAMEWORKS.map((f) => (
-                  <span key={f.key} className="chip border-white/10 bg-white/[0.03] text-ink-300 normal-case tracking-normal">{f.short}</span>
+                  <span key={f.key} className="chip border-fg/10 bg-fg/[0.03] text-ink-300 normal-case tracking-normal">{f.short}</span>
                 ))}
               </div>
             </div>
@@ -183,7 +200,7 @@ export default async function Home() {
         </section>
 
         {/* TIERS */}
-        <section className="border-t border-white/[0.05] bg-ink-900/40">
+        <section className="border-t border-fg/[0.05] bg-ink-900/40">
           <div className="mx-auto max-w-7xl px-4 py-20 sm:px-6">
             <h2 className="h-display mb-10 text-center text-3xl font-bold sm:text-4xl">{t("tiers.title")}</h2>
             <div className="grid gap-4 md:grid-cols-3">

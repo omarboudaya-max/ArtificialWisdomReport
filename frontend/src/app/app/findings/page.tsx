@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { TrendingUp } from "lucide-react";
 import { requireOrg } from "@/lib/session";
+import { getT } from "@/lib/i18n/server";
 import { Empty, PageHeader, SeverityBadge } from "@/components/ui/Badges";
 import { updateFinding } from "../actions";
 import { SubmitButton } from "@/components/app/SubmitButton";
@@ -10,7 +11,7 @@ export const metadata = { title: "Corrective actions" };
 
 export default async function Findings({ searchParams }: { searchParams: Promise<{ status?: string; severity?: string; system?: string }> }) {
   const sp = await searchParams;
-  const { supabase, org, canEdit } = await requireOrg();
+  const [{ supabase, org, canEdit }, { t }] = await Promise.all([requireOrg(), getT()]);
   let q = supabase.from("findings").select("*, ai_systems(name)").eq("org_id", org.id).order("created_at", { ascending: false }).limit(300);
   const status = sp.status ?? "active";
   if (status === "active") q = q.in("status", ["open", "in_progress"]);
@@ -30,11 +31,11 @@ export default async function Findings({ searchParams }: { searchParams: Promise
   };
   return (
     <>
-      <PageHeader eyebrow="Intelligent corrective-action system" title="Corrective actions" subtitle="Every failed metric with its measured value, threshold, reason, fix, evidence required, retest procedure and projected AW-GTI uplift." />
+      <PageHeader eyebrow="Intelligent corrective-action system" title={t("pg.findings")} subtitle="Every failed metric with its measured value, threshold, reason, fix, evidence required, retest procedure and projected AW-GTI uplift." />
       <div className="mb-5 flex flex-wrap gap-2 text-xs">
-        {["active", "open", "in_progress", "resolved", "accepted_risk", "all"].map((s) => <Link key={s} href={filter("status", s)} className={`rounded-lg border px-3 py-1.5 font-semibold ${status === s ? "border-brand-400 bg-brand-500/20 text-white" : "border-white/10 text-ink-300"}`}>{s.replace("_", " ")}</Link>)}
-        <span className="mx-2 border-s border-white/10" />
-        {["critical", "high", "medium", "low"].map((s) => <Link key={s} href={filter("severity", sp.severity === s ? undefined : s)} className={`rounded-lg border px-3 py-1.5 font-semibold ${sp.severity === s ? "border-brand-400 bg-brand-500/20 text-white" : "border-white/10 text-ink-300"}`}>{s}</Link>)}
+        {["active", "open", "in_progress", "resolved", "accepted_risk", "all"].map((s) => <Link key={s} href={filter("status", s)} className={`rounded-lg border px-3 py-1.5 font-semibold ${status === s ? "border-brand-400 bg-brand-500/20 text-fg" : "border-fg/10 text-ink-300"}`}>{s.replace("_", " ")}</Link>)}
+        <span className="mx-2 border-s border-fg/10" />
+        {["critical", "high", "medium", "low"].map((s) => <Link key={s} href={filter("severity", sp.severity === s ? undefined : s)} className={`rounded-lg border px-3 py-1.5 font-semibold ${sp.severity === s ? "border-brand-400 bg-brand-500/20 text-fg" : "border-fg/10 text-ink-300"}`}>{s}</Link>)}
       </div>
       {!rows.length ? <Empty title="No corrective actions match">Run an assessment to generate prioritised recommendations.</Empty> : (
         <div className="space-y-3">
@@ -45,11 +46,11 @@ export default async function Findings({ searchParams }: { searchParams: Promise
                 <summary className="flex cursor-pointer list-none flex-wrap items-center gap-3 p-4">
                   <SeverityBadge severity={f.severity} />
                   <div className="min-w-0 flex-1"><div className="font-medium">{f.title}</div><div className="text-xs text-ink-400">{(f.ai_systems as unknown as { name: string })?.name} · {f.measured}</div></div>
-                  {Number(f.projected_uplift) > 0 && <span className="chip border-emerald-500/30 bg-emerald-500/10 text-emerald-300 normal-case tracking-normal"><TrendingUp size={11} /> +{f.projected_uplift}</span>}
-                  <span className="chip border-white/10 text-ink-300">{f.status.replace("_", " ")}</span>
+                  {Number(f.projected_uplift) > 0 && <span className="chip border-emerald-500/30 bg-emerald-500/10 text-emerald-300 normal-case tracking-normal"><TrendingUp size={11} /> <span dir="ltr">+{f.projected_uplift}</span></span>}
+                  <span className="chip border-fg/10 text-ink-300">{f.status.replace("_", " ")}</span>
                   {f.due_date && <span className="text-xs text-ink-400">due {f.due_date}</span>}
                 </summary>
-                <div className="grid gap-5 border-t border-white/[0.06] p-4 text-sm lg:grid-cols-[1.3fr_1fr]">
+                <div className="grid gap-5 border-t border-fg/[0.06] p-4 text-sm lg:grid-cols-[1.3fr_1fr]">
                   <div className="space-y-2">
                     <div><span className="text-ink-400">Threshold:</span> {f.threshold ?? "—"}</div>
                     <div><span className="text-ink-400">Why:</span> {rec.why}</div>

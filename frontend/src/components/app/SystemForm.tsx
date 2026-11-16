@@ -31,7 +31,7 @@ export function SystemForm({ action, system = {}, submit }: { action: (f: FormDa
         <legend className="label">Jurisdictions where it is offered or used</legend>
         <div className="flex flex-wrap gap-2">
           {JURISDICTIONS.map((j) => (
-            <label key={j.code} className="flex cursor-pointer items-center gap-2 rounded-lg border border-white/10 bg-white/[0.02] px-3 py-2 text-sm has-[:checked]:border-brand-400/60 has-[:checked]:bg-brand-500/10">
+            <label key={j.code} className="flex cursor-pointer items-center gap-2 rounded-lg border border-fg/10 bg-fg/[0.02] px-3 py-2 text-sm has-[:checked]:border-brand-400/60 has-[:checked]:bg-brand-500/10">
               <input type="checkbox" name="jurisdictions" value={j.code} defaultChecked={system.jurisdictions?.includes(j.code)} className="accent-brand-500" /> {j.label}
             </label>
           ))}
